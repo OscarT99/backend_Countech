@@ -1,10 +1,12 @@
 const { response } = require("express");
 const Empleado = require("../../models/empleadoModel/empleadoModel");
+const AsignarProcesoEmpleado = require("../../models/produccionModel/asignarProcesoEmpleado");
 
-const getEmpleados = async (req, res = response) => {
+
+const getAllEmpleados = async (req, res) => {
   try {
-    const listEmpleados = await Empleado.findAll();
-    res.json({ listEmpleados });
+    const data = await Empleado.findAll();
+    res.json({ Empleados: data });
   } catch (error) {
     console.log(error);
     res.json({
@@ -13,7 +15,7 @@ const getEmpleados = async (req, res = response) => {
   }
 };
 
-const getEmpleado = async (req, res = response) => {
+const getOneEmpleado = async (req, res = response) => {
   try {
     const { id } = req.params;
     const empleado = await Empleado.findByPk(id);
@@ -35,6 +37,21 @@ const getEmpleado = async (req, res = response) => {
 const postEmpleado = async (req, res = response) => {
   try {
     const { body } = req;
+
+
+    // if(!body.nombre){
+    //   return res.status(400).json({error: 'El campo nombre es obligatorio.'});
+    // }
+    // const validateRes = await validateEmpleado(dataEmpleado, res);
+    
+    // console.log(validateRes);
+
+    // () => {
+    //   if (!validateRes.success) {
+    //     return res.status(400).json(validateRes);
+    //   }
+    // }
+
     await Empleado.create(body);
 
     res.json({
@@ -47,6 +64,47 @@ const postEmpleado = async (req, res = response) => {
     });
   }
 };
+
+const putCambiarEstadoEmpleado = async (req, res = response) => {
+  try {
+    const { body } = req;
+    const { id } = req.params;
+    const getEmpleado = await Empleado.findByPk(id);
+
+    if(!getEmpleado){
+      return res.status(404).json({
+        msg: `No existe un empleado con el id ${id}`,
+      });
+    }
+
+    const validateProcesoAsignado = await AsignarProcesoEmpleado.findAll({
+      where: {
+        empleadoId: getEmpleado.id,
+        estadoProcAsig: false,
+      }
+    })
+  
+
+    console.log(validateProcesoAsignado)
+
+    if(validateProcesoAsignado.length > 0){
+      return res.status(400).json({
+        msg: `El empleado tiene procesos asignados pendientes.`,
+      });
+    }else{
+      await getEmpleado.update(body);
+      res.json({
+        msg: `¡El estado del empleado fue actualizado con exito!`,
+      });
+    }
+
+  } catch (error) {
+    console.log(error);
+    res.json({
+      msg: `¡Uy! Ha ocurrido un error. Por favor intenta de nuevo.`,
+    });
+  }
+}
 
 const putEmpleado = async (req, res = response) => {
   try {
@@ -74,8 +132,9 @@ const putEmpleado = async (req, res = response) => {
 };
 
 module.exports = {
-  getEmpleados,
-  getEmpleado,
+  getAllEmpleados,
+  getOneEmpleado,
   postEmpleado,
-  putEmpleado
+  putCambiarEstadoEmpleado,
+  putEmpleado,
 };

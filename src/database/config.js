@@ -1,35 +1,30 @@
 const Sequelize = require('sequelize');
-const mysql2 = require('mysql2');
 
-const sequelize = new Sequelize({
-    dialect:'mysql',
-    host:'localhost',
-    username:'root',
-    password:'OscarT.99',
-    database:'countech'
-})
+const sequelize = new Sequelize('db_project_v1', 'root', 'password', {
+    host: 'localhost',
+    dialect: 'mysql'
+  });
 
-// const sequelize = new Sequelize('db_project_aws', 'admin', 'Default2023', {
-//   host: 'database-project.cz2io8dbm9oh.us-east-2.rds.amazonaws.com',
-//   dialect: 'mysql',
-//   dialectModule: mysql2,
-// });
+// const sequelize = new Sequelize('sqlite::memory:')
 
-sequelize
+ sequelize
     .authenticate()
     .then(() =>{
-        console.log('Conexion a la base de datos exitosa.')
+        console.log('Connection has been established successfully.')
     })
     .catch((err) =>{
-        console.error('Error al conectar a la base de datos.',err)
+        console.error('Unable to connect to the database:',err)
     })
 
-sequelize.sync()
+sequelize.sync({ force: true })
     .then(() =>{
-        console.log('Tablas sincronizadas con exito')
+        console.log('All models were synchronized successfully.')
     })
     .catch((err) =>{
-        console.error('Error al sincronizar las tablas:',err)
+        console.error('Error synchronizing the models:',err)
     })
 
-    module.exports = {sequelize}
+
+module.exports = {
+    sequelize,
+}

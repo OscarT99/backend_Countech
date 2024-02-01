@@ -32,38 +32,7 @@ const ColorProcesoReferenciaPedidoModel = sequelize.define('ColorEnProcesoEnRefe
       min: 1,
     },
   },
-  cantAsignadaS: {
-    type: DataTypes.INTEGER,    
-    defaultValue: 0,
-  },  
-  cantHechaS: {    
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-  cantAsignadaM: {
-    type: DataTypes.INTEGER,    
-    defaultValue: 0,
-  },  
-  cantHechaM: {    
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-  cantAsignadaL: {
-    type: DataTypes.INTEGER,    
-    defaultValue: 0,
-  },  
-  cantHechaL: {    
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-  cantAsignadaXL: {
-    type: DataTypes.INTEGER,    
-    defaultValue: 0,
-  },  
-  cantHechaXL: {    
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
+  
 });
 
 module.exports = ColorProcesoReferenciaPedidoModel;

@@ -1,6 +1,5 @@
 const clienteRoutes = require('./clienteRoute/clienteRoute');
 const proveedorRoutes = require('./proveedorRoute/proveedorRoute')
-const categoriaInsumoRoute = require('../routes/insumoRoute/insumoCategoriaRoute') 
 const insumoRoute = require('./insumoRoute/insumoRoute')
 const usuarioRoute = require('./usuarioRoute/usuarioRoute')
 const ventaRoute = require('../routes/ventaRoute/ventaRoute')
@@ -17,7 +16,6 @@ const salidaInsumoRoute = require('./salidaInsumoRoute/salidaInsumoRoute')
 function configureRoutes(app, path) {
     app.use(path, clienteRoutes);
     app.use(path,proveedorRoutes);
-    app.use(path,categoriaInsumoRoute),
     app.use(path,insumoRoute),
     app.use(path, usuarioRoute);
     app.use(path, ventaRoute);

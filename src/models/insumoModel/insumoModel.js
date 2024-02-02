@@ -1,12 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../../database/config');
-const CategoriaInsumo = require('./categoriaInsumoModel');
 
-const InsumoModel = sequelize.define('Insumo',{
-    categoria:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
+const InsumoModel = sequelize.define('Insumo',{    
     nombre:{
         type: DataTypes.STRING,
         allowNull: false,
@@ -23,7 +18,5 @@ const InsumoModel = sequelize.define('Insumo',{
         defaultValue: true,
     },
 })
-
-InsumoModel.belongsTo(CategoriaInsumo,{foreignKey:'categoria'})
 
 module.exports = InsumoModel

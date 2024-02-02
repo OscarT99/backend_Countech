@@ -22,9 +22,9 @@ const getAllPedidosConRelaciones = async (req, res = response) => {
                     ],                    
                 },
             ],
-        });
-
+        });        
         res.json({ listaPedidos });
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -91,7 +91,6 @@ const postPedidoCompleto = async (req, res = response,next) => {
             descripcion: pedidoData.descripcion,
             valorUnitario: pedidoData.valorUnitario,
             cantidadTotal: pedidoData.cantidadTotal,
-
             valorTotal: pedidoData.valorUnitario * pedidoData.cantidadTotal
         });
                         
@@ -176,7 +175,6 @@ const deletePedidoCompleto = async (req, res = response) => {
         });
     }
 };
-
 
 module.exports = {
     getAllPedidosConRelaciones,

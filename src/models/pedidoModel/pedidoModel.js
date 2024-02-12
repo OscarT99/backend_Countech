@@ -73,11 +73,18 @@ const PedidoModel = sequelize.define('Pedido', {
   },
   fechaVenta: {
     type: DataTypes.DATEONLY,
-  allowNull: true,
+    allowNull: true,
   },
   estadoPedido: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
+    allowNull: false,
+    // validate: {
+    //   notnull:{
+    //     args: true,
+    //     msg: 'El estado del pedido no puede ser nulo.',
+    //   }
+    // },
   },
   motivoDeAnulacion:{
     type: DataTypes.STRING,

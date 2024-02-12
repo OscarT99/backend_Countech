@@ -1,10 +1,31 @@
-const { response } = require("express");
 const Empleado = require("../../models/empleadoModel/empleadoModel");
+const AsignarProcesoEmpleado = require("../../models/produccionModel/asignarProcesoEmpleado");
 
-const getEmpleados = async (req, res = response) => {
+
+const getEmpleadoProceso = async (req, res) => {
   try {
-    const listEmpleados = await Empleado.findAll();
-    res.json({ listEmpleados });
+      const { id } = req.params;
+      const data = await Empleado.findAll({
+          include: [
+              {
+                  model: AsignarProcesoEmpleado,                    
+              },
+          ],
+      });
+        res.json({EmpleadoProcesos : data});
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({
+          success: false,
+          error: 'Ocurrió un error al obtener la lista de empleados con sus procesos',
+      });
+  }
+};
+
+const getAllEmpleados = async (req, res) => {
+  try {
+    const data = await Empleado.findAll();
+    res.json({ Empleados: data });
   } catch (error) {
     console.log(error);
     res.json({
@@ -13,7 +34,7 @@ const getEmpleados = async (req, res = response) => {
   }
 };
 
-const getEmpleado = async (req, res = response) => {
+const getOneEmpleado = async (req, res) => {
   try {
     const { id } = req.params;
     const empleado = await Empleado.findByPk(id);
@@ -32,21 +53,71 @@ const getEmpleado = async (req, res = response) => {
   }
 };
 
-const postEmpleado = async (req, res = response) => {
+const postEmpleado = async (req, res) => {
+  try {
+    const { tipoIdentidad, numIdentidad, nombre, apellido, correo, telefono, ciudad, direccion, fechaIngreso, estado, estadoOcupado } = req.body;
+
+    await Empleado.create({
+      tipoIdentidad,
+      numIdentidad,
+      nombre,
+      apellido,
+      correo,
+      telefono,
+      ciudad,
+      direccion,
+      fechaIngreso,
+      estado,
+      estadoOcupado
+    });
+
+    res.send({ msg: "¡Empleado creado con éxito!"})
+
+  } catch (err) {
+    res.send({ msg: "¡Uy! Ha ocurrido un error. Por favor intenta de nuevo."})
+  }
+};
+
+const putCambiarEstadoEmpleado = async (req, res = response) => {
   try {
     const { body } = req;
-    await Empleado.create(body);
+    const { id } = req.params;
+    const getEmpleado = await Empleado.findByPk(id);
 
-    res.json({
-      msg: `¡El Empleado fue agregado con exito!`,
-    });
+    if(!getEmpleado){
+      return res.status(404).json({
+        msg: `No existe un empleado con el id ${id}`,
+      });
+    }
+
+    const validateProcesoAsignado = await AsignarProcesoEmpleado.findAll({
+      where: {
+        empleadoId: getEmpleado.id,
+        estadoProcAsig: false,
+      }
+    })
+  
+
+    console.log(validateProcesoAsignado)
+
+    if(validateProcesoAsignado.length > 0){
+      return res.status(400).json({
+        msg: `El empleado tiene procesos asignados pendientes.`,
+      });
+    }else{
+      await getEmpleado.update(body);
+      res.json({
+        msg: `¡El estado del empleado fue actualizado con exito!`,
+      });
+    }
+
   } catch (error) {
     console.log(error);
     res.json({
       msg: `¡Uy! Ha ocurrido un error. Por favor intenta de nuevo.`,
     });
   }
-};
+}
 
 const putEmpleado = async (req, res = response) => {
   try {
@@ -74,8 +145,10 @@ const putEmpleado = async (req, res = response) => {
 };
 
 module.exports = {
-  getEmpleados,
-  getEmpleado,
+  getEmpleadoProceso,
+  getAllEmpleados,
+  getOneEmpleado,
   postEmpleado,
-  putEmpleado
+  putCambiarEstadoEmpleado,
+  putEmpleado,
 };

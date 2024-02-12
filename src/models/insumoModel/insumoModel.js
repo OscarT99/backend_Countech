@@ -12,6 +12,7 @@ const InsumoModel = sequelize.define('Insumo',{
     },
     cantidad:{
         type: DataTypes.INTEGER,
+        default:0
     },
     estado: {
         type: DataTypes.BOOLEAN,

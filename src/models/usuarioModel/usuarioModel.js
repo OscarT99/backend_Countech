@@ -19,7 +19,7 @@ const Usuario = sequelize.define('Usuario', {
     unique: true,
   },
   email: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.STRING(180),
     allowNull: false,
     validate: {
       is: /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+/,

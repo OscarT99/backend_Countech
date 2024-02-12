@@ -32,6 +32,7 @@ const ColorProcesoReferenciaPedidoModel = sequelize.define('ColorEnProcesoEnRefe
       min: 1,
     },
   },
+  
 });
 
 module.exports = ColorProcesoReferenciaPedidoModel;

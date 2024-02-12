@@ -68,7 +68,7 @@ const getPedidoConRelacionesPorId = async (req, res = response) => {
     }
 };
 
-const postPedidoCompleto = async (req, res = response,next) => {
+const postPedidoCompleto = async (req, res = response, next) => {
     try {
         const pedidoData = req.body;
 
@@ -102,7 +102,7 @@ const postPedidoCompleto = async (req, res = response,next) => {
                         proceso: procesoData.proceso,
                         tipoDeMaquina: procesoData.tipoDeMaquina,
                         cantidadTotal: procesoData.cantidadTotal,
-                        cantidadPendiente:procesoData.cantidadTotal
+                        cantidadPendiente: procesoData.cantidadTotal
                         // ... otras propiedades de ProcesoReferenciaPedido
                     });
 

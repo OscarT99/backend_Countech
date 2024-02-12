@@ -4,7 +4,7 @@ const AvanceProcesoEmpleado = require('./avanceProcesoEmpleado');
 const AsignarProcesoEmpleado = sequelize.define("asignarProcesoEmpleado", {
 
 
-  cantAsignada: {
+  cantidadAsignada: {
     type: DataTypes.INTEGER,
     allowNull: false,
     validate: {
@@ -64,12 +64,12 @@ const AsignarProcesoEmpleado = sequelize.define("asignarProcesoEmpleado", {
 {
   hooks: {
     beforeCreate: (AsignarProcesoEmpleado) => {
-      AsignarProcesoEmpleado.cantRestante = AsignarProcesoEmpleado.cantAsignada;
+      AsignarProcesoEmpleado.cantRestante = AsignarProcesoEmpleado.cantidadAsignada;
     }
   }
 }
 
 );
 
-AsignarProcesoEmpleado.hasMany(AvanceProcesoEmpleado, { foreignKey: 'asignarprocesoempleadoId' });
+AsignarProcesoEmpleado.hasMany(AvanceProcesoEmpleado, { foreignKey: 'asignarProcesoEmpleadoId' });
 module.exports = AsignarProcesoEmpleado;

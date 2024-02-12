@@ -3,7 +3,7 @@ const { sequelize } = require("../../database/config");
 
 const AvanceProcesoEmpleado = sequelize.define("avanceProcesoEmpleado", {
   
-  cantHecha: {
+  cantidadHecha: {
     type: DataTypes.INTEGER,
     allowNull: false,
     validate: {

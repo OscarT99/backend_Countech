@@ -102,8 +102,8 @@ const postPedidoCompleto = async (req, res = response, next) => {
                         pedido: pedido.id,
                         proceso: procesoData.proceso,
                         tipoDeMaquina: procesoData.tipoDeMaquina,
-                        cantTotal: procesoData.cantidadTotal,
-                        cantPendiente: procesoData.cantidadTotal
+                        cantidadTotal: procesoData.cantidadTotal,
+                        cantidadPendiente: procesoData.cantidadTotal
                         // ... otras propiedades de ProcesoReferenciaPedido
                     });
 

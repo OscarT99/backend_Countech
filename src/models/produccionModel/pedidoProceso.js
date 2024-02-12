@@ -24,7 +24,7 @@ const PedidoProceso = sequelize.define('pedidoproceso', {
 //     },
 //   },
 
-  cantTotal: {
+  cantidadTotal: {
     type: DataTypes.INTEGER,
     allowNull: false,
     validate: {
@@ -36,7 +36,7 @@ const PedidoProceso = sequelize.define('pedidoproceso', {
     },
   },
 
-  cantAsignada: {
+  cantidadAsignada: {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0,
@@ -48,7 +48,7 @@ const PedidoProceso = sequelize.define('pedidoproceso', {
     // },
   },
 
-  cantHecha: {
+  cantidadHecha: {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0,
@@ -60,7 +60,7 @@ const PedidoProceso = sequelize.define('pedidoproceso', {
     // },
   },
 
-  cantPendiente: {
+  cantidadPendiente: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
     allowNull: false,
@@ -83,7 +83,7 @@ const PedidoProceso = sequelize.define('pedidoproceso', {
   {
     hooks: {
       beforeCreate: (pedidoProceso) => {
-        pedidoProceso.cantPendiente = pedidoProceso.cantTotal;
+        pedidoProceso.cantidadPendiente = pedidoProceso.cantidadTotal;
       }
     }
   }

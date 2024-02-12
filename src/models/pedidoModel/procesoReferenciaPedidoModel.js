@@ -30,7 +30,7 @@ const ProcesoReferenciaPedidoModel = sequelize.define('ProcesoEnReferenciaEnPedi
     },
   },
 
-  cantTotal: {
+  cantidadTotal: {
     type: DataTypes.INTEGER,
     allowNull: false,
     validate: {
@@ -42,7 +42,7 @@ const ProcesoReferenciaPedidoModel = sequelize.define('ProcesoEnReferenciaEnPedi
     },
   },
 
-  cantAsignada: {
+  cantidadAsignada: {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0,
@@ -55,7 +55,7 @@ const ProcesoReferenciaPedidoModel = sequelize.define('ProcesoEnReferenciaEnPedi
     },
   },
 
-  cantHecha: {
+  cantidadHecha: {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0,
@@ -67,7 +67,7 @@ const ProcesoReferenciaPedidoModel = sequelize.define('ProcesoEnReferenciaEnPedi
       }
     },
   },
-  cantPendiente: {
+  cantidadPendiente: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
     allowNull: false,
@@ -96,7 +96,7 @@ const ProcesoReferenciaPedidoModel = sequelize.define('ProcesoEnReferenciaEnPedi
 {
   hooks: {
     beforeCreate: (ProcesoReferenciaPedidoModel) => {
-      ProcesoReferenciaPedidoModel.cantPendiente = ProcesoReferenciaPedidoModel.cantTotal;
+      ProcesoReferenciaPedidoModel.cantidadPendiente = ProcesoReferenciaPedidoModel.cantidadTotal;
     }
   }
 }

@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
+const { createValidator } = require('../../validators/empleado');
 
-const empleadoController = require('../../controllers/empleadoController/empleadoController')
+const {getEmpleadoProceso, getAllEmpleados, getOneEmpleado, postEmpleado, putCambiarEstadoEmpleado, putEmpleado} = require('../../controllers/empleadoController/empleadoController');
 
 router
-    .get('/empleados', empleadoController.getAllEmpleados)
-    .get('/empleado/:id', empleadoController.getOneEmpleado)
-    .post('/empleado', empleadoController.postEmpleado)
-    .put('/empleado/:id', empleadoController.putCambiarEstadoEmpleado)
-    .put('/empleado/:id', empleadoController.putEmpleado)
+    .get('/empleado/proceso', getEmpleadoProceso)
+    .get('/empleados', getAllEmpleados)
+    .get('/empleado/:id' , getOneEmpleado)
+    .post('/empleado', createValidator, postEmpleado)
+    .put('/empleado/:id', putCambiarEstadoEmpleado)
+    .put('/empleado/:id', putEmpleado)
 
 module.exports = router
 

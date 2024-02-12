@@ -1,7 +1,26 @@
-const { response } = require("express");
 const Empleado = require("../../models/empleadoModel/empleadoModel");
 const AsignarProcesoEmpleado = require("../../models/produccionModel/asignarProcesoEmpleado");
 
+
+const getEmpleadoProceso = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const data = await Empleado.findAll({
+          include: [
+              {
+                  model: AsignarProcesoEmpleado,                    
+              },
+          ],
+      });
+        res.json({EmpleadoProcesos : data});
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({
+          success: false,
+          error: 'Ocurrió un error al obtener la lista de empleados con sus procesos',
+      });
+  }
+};
 
 const getAllEmpleados = async (req, res) => {
   try {
@@ -15,7 +34,7 @@ const getAllEmpleados = async (req, res) => {
   }
 };
 
-const getOneEmpleado = async (req, res = response) => {
+const getOneEmpleado = async (req, res) => {
   try {
     const { id } = req.params;
     const empleado = await Empleado.findByPk(id);
@@ -34,34 +53,28 @@ const getOneEmpleado = async (req, res = response) => {
   }
 };
 
-const postEmpleado = async (req, res = response) => {
+const postEmpleado = async (req, res) => {
   try {
-    const { body } = req;
+    const { tipoIdentidad, numIdentidad, nombre, apellido, correo, telefono, ciudad, direccion, fechaIngreso, estado, estadoOcupado } = req.body;
 
-
-    // if(!body.nombre){
-    //   return res.status(400).json({error: 'El campo nombre es obligatorio.'});
-    // }
-    // const validateRes = await validateEmpleado(dataEmpleado, res);
-    
-    // console.log(validateRes);
-
-    // () => {
-    //   if (!validateRes.success) {
-    //     return res.status(400).json(validateRes);
-    //   }
-    // }
-
-    await Empleado.create(body);
-
-    res.json({
-      msg: `¡El Empleado fue agregado con exito!`,
+    await Empleado.create({
+      tipoIdentidad,
+      numIdentidad,
+      nombre,
+      apellido,
+      correo,
+      telefono,
+      ciudad,
+      direccion,
+      fechaIngreso,
+      estado,
+      estadoOcupado
     });
-  } catch (error) {
-    console.log(error);
-    res.json({
-      msg: `¡Uy! Ha ocurrido un error. Por favor intenta de nuevo.`,
-    });
+
+    res.send({ msg: "¡Empleado creado con éxito!"})
+
+  } catch (err) {
+    res.send({ msg: "¡Uy! Ha ocurrido un error. Por favor intenta de nuevo."})
   }
 };
 
@@ -132,6 +145,7 @@ const putEmpleado = async (req, res = response) => {
 };
 
 module.exports = {
+  getEmpleadoProceso,
   getAllEmpleados,
   getOneEmpleado,
   postEmpleado,

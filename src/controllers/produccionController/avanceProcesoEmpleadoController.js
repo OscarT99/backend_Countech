@@ -52,11 +52,11 @@ const getAllAvanceProcesos = async (req, res = response) => {
         });
       } 
       
-      if (body.cantHecha > getAsignarProceso.cantRestante) {
+      if (body.cantidadHecha > getAsignarProceso.cantRestante) {
         return res.status(404).json({
           msg: `La cantidad terminada no puede ser mayor a la cantidad restante.`,
         });
-      } else if (body.cantHecha <= 0) {
+      } else if (body.cantidadHecha <= 0) {
         return res.status(404).json({
           msg: `La cantidad terminada no puede ser menor o igual a 0.`,
         });
@@ -71,19 +71,19 @@ const getAllAvanceProcesos = async (req, res = response) => {
 
 
       await getPedidoProceso.update({
-        cantHecha: getPedidoProceso.cantHecha + body.cantHecha,
+        cantidadHecha: getPedidoProceso.cantidadHecha + body.cantidadHecha,
       })
 
       try{
       
-      if((getAsignarProceso.cantRestante - body.cantHecha) == 0){
+      if((getAsignarProceso.cantRestante - body.cantidadHecha) == 0){
         await getAsignarProceso.update({
-          cantRestante: getAsignarProceso.cantRestante - body.cantHecha,
+          cantRestante: getAsignarProceso.cantRestante - body.cantidadHecha,
           estadoProcAsig: true
         })
       } else{
         await getAsignarProceso.update({
-          cantRestante: getAsignarProceso.cantRestante - body.cantHecha,
+          cantRestante: getAsignarProceso.cantRestante - body.cantidadHecha,
         })
       }}catch(err){
         console.log(err)
@@ -103,7 +103,7 @@ const getAllAvanceProcesos = async (req, res = response) => {
       }
 
       try{
-        if((getPedidoProceso.cantTotal - getPedidoProceso.cantHecha) == 0){
+        if((getPedidoProceso.cantidadTotal - getPedidoProceso.cantidadHecha) == 0){
           try{
             await getPedidoProceso.update({
               estado: true

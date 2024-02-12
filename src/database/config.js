@@ -16,7 +16,7 @@ const sequelize = new Sequelize('db_project_v1', 'root', 'password', {
         console.error('Unable to connect to the database:',err)
     })
 
-sequelize.sync({ force: true })
+sequelize.sync({ alter: true })
     .then(() =>{
         console.log('All models were synchronized successfully.')
     })

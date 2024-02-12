@@ -54,16 +54,16 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
         return res.status(404).json({
           msg: `El empleado no está activo.`,
         });
-      } else if (body.cantAsignada > getPedidoProceso.cantPendiente) {
+      } else if (body.cantidadAsignada > getPedidoProceso.cantidadPendiente) {
         return res.status(404).json({
           msg: `La cantidad asignada no puede ser mayor a la cantidad pendiente.`,
         });
-      } else if (getPedidoProceso.cantTotal === getPedidoProceso.cantAsignada){
+      } else if (getPedidoProceso.cantidadTotal === getPedidoProceso.cantidadAsignada){
         return res.status(404).json({
           msg: `El pedido ya está completo.`,
         });
       }
-       else if (body.cantAsignada <= 0) {
+       else if (body.cantidadAsignada <= 0) {
         return res.status(404).json({
           msg: `La cantidad asignada no puede ser menor o igual a 0.`,
         });
@@ -83,8 +83,8 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
 
         //Se actualiza el pedido proceso
         await getPedidoProceso.update({
-          cantAsignada: getPedidoProceso.cantAsignada + body.cantAsignada,
-          cantPendiente: getPedidoProceso.cantPendiente - body.cantAsignada,
+          cantidadAsignada: getPedidoProceso.cantidadAsignada + body.cantidadAsignada,
+          cantidadPendiente: getPedidoProceso.cantidadPendiente - body.cantidadAsignada,
         })
 
         //Se actualiza el estado ocupado del empleado
@@ -143,8 +143,8 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
         const getPedidoProceso = await PedidoProceso.findByPk(getAsignarProceso.pedidoprocesoId);
 
         await getPedidoProceso.update({
-          cantAsignada: getPedidoProceso.cantAsignada - getAsignarProceso.cantAsignada,
-          cantPendiente: getPedidoProceso.cantPendiente + getAsignarProceso.cantAsignada,
+          cantidadAsignada: getPedidoProceso.cantidadAsignada - getAsignarProceso.cantidadAsignada,
+          cantidadPendiente: getPedidoProceso.cantidadPendiente + getAsignarProceso.cantidadAsignada,
         });
 
         try{

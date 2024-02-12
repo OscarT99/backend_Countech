@@ -204,6 +204,21 @@ const restarCantidadInsumo = async (req, res = response) => {
     }
 };
 
+const restarCantidadInsumoCompra = async (id, cantidad) => {
+    try {
+        const insumo = await Insumo.findByPk(id);
+
+        if (insumo) {
+            insumo.cantidad -= cantidad;
+            await insumo.save();
+        } else {
+            console.error(`No se encontró el insumo con id ${id}`);
+        }
+    } catch (error) {
+        console.error('Error al restar la cantidad del insumo:', error);
+    }
+};
+
 const actualizarEstadoInsumo = async (req, res = response) => {
     try {
         const { id } = req.params;
@@ -240,5 +255,6 @@ module.exports = {
     buscarInsumos,
     sumarCantidadInsumo,
     restarCantidadInsumo,
+    restarCantidadInsumoCompra,
     actualizarEstadoInsumo
 };

@@ -135,20 +135,31 @@ const postPedidoCompleto = async (req, res = response, next) => {
     }
 };
 
-const deletePedidoCompleto = async (req, res = response) => {
-    const { id } = req.params;
-
+const putPedidoCompleto = async (req, res = response, next) => {
     try {
+        const { id } = req.params;
+        const pedidoData = req.body;
+
+        // Validar los datos del pedido
+        const validationResponse = await validarPedido(pedidoData, res);
+
+        if (!validationResponse.success) {
+            return next(res.status(400).json({ success: false, error: validationResponse.error }));
+        }
+
         // Buscar el pedido por su ID con todas las relaciones
         const pedido = await Pedido.findByPk(id, {
             include: [
-                {                    
+                {
+                    model: Cliente,
+                },
+                {
                     model: ProcesoReferenciaPedido,
                     include: [
                         {
-                            model: ColorProcesoReferenciaPedido,                                    
+                            model: ColorProcesoReferenciaPedido,
                         },
-                    ],                        
+                    ],
                 },
             ],
         });
@@ -157,21 +168,101 @@ const deletePedidoCompleto = async (req, res = response) => {
             return res.status(404).json({ success: false, error: 'Pedido no encontrado.' });
         }
 
-        // Eliminar el pedido y todas sus relaciones en cascada
-        await Pedido.destroy({
-            where: { id: pedido.id },
-            cascade: true, // Esto es ficticio, debes implementar esto en tu modelo
+        // Actualizar los campos del pedido
+        await pedido.update({
+            cliente: pedidoData.cliente,
+            ordenTrabajo: pedidoData.ordenTrabajo,
+            fechaOrdenTrabajo: pedidoData.fechaOrdenTrabajo,
+            fechaEntregaOrden: pedidoData.fechaEntregaOrden,
+            formaPago: pedidoData.formaPago,
+            observaciones: pedidoData.observaciones,
+            referencia: pedidoData.referencia,
+            descripcion: pedidoData.descripcion,
+            valorUnitario: pedidoData.valorUnitario,
+            cantidadTotal: pedidoData.cantidadTotal,
+            valorTotal: pedidoData.valorUnitario * pedidoData.cantidadTotal,
         });
 
+        // Eliminar los procesos existentes
+        await ProcesoReferenciaPedido.destroy({
+            where: {
+                pedido: id,
+            },
+            cascade: true, // Si has implementado cascading en tu modelo
+        });
+
+        // Recrear los procesos con los nuevos datos
+        if (pedidoData.ProcesoEnReferenciaEnPedidos) {
+            for (const procesoData of pedidoData.ProcesoEnReferenciaEnPedidos) {
+                const procesoEnReferencia = await ProcesoReferenciaPedido.create({
+                    pedido: id,
+                    proceso: procesoData.proceso,
+                    tipoDeMaquina: procesoData.tipoDeMaquina,
+                    cantidadTotal: procesoData.cantidadTotal,
+                    cantidadPendiente: procesoData.cantidadTotal,
+                });
+
+                // Crea los colores en proceso
+                if (procesoData.ColorEnProcesoEnReferenciaEnPedidos) {
+                    for (const colorData of procesoData.ColorEnProcesoEnReferenciaEnPedidos) {
+                        await ColorProcesoReferenciaPedido.create({
+                            proceso: procesoEnReferencia.id,
+                            color: colorData.color,
+                            tallaS: colorData.tallaS,
+                            tallaM: colorData.tallaM,
+                            tallaL: colorData.tallaL,
+                            tallaXL: colorData.tallaXL,
+                            cantidadTotal: colorData.cantidadTotal,
+                        });
+                    }
+                }
+            }
+        }
+
+        // Devuelve una respuesta si todo fue exitoso
         res.json({
             success: true,
-            message: 'Pedido y sus relaciones eliminados exitosamente.',
+            message: 'Pedido completo editado exitosamente.',
         });
     } catch (error) {
         console.error(error);
+        next({ success: false, error: 'Ocurrió un error al editar el pedido completo' });
+    }
+};
+
+const anularPedido = async (req, res = response) => {
+    try {
+        const { id } = req.params;
+        const { estadoPedido, motivoDeAnulacion } = req.body; // Modificado para recibir el motivo de anulación
+
+        const pedido = await Pedido.findByPk(id);
+
+        if (pedido) {
+            if (pedido.estadoPedido) {
+                pedido.estadoPedido = false;
+                pedido.motivoDeAnulacion = motivoDeAnulacion; 
+                await pedido.save();
+                res.json({
+                    success: true,
+                    message: `El pedido con orden de trabajo ${pedido.ordenTrabajo} fue anulada correctamente.`,
+                });
+            } else {
+                res.json({
+                    success: false,
+                    error: `El pedido con orden de trabajo ${pedido.ordenTrabajo} ya está anulada.`,
+                });
+            }
+        } else {
+            res.status(404).json({
+                success: false,
+                error: `No existe un pedido con el id ${id}`,
+            });
+        }
+    } catch (error) {
+        console.error('Error al anular el pedido:', error);
         res.status(500).json({
             success: false,
-            error: 'Ocurrió un error al eliminar el pedido y sus relaciones.',
+            error: 'Ocurrió un problema al anular el pedido',
         });
     }
 };
@@ -180,5 +271,6 @@ module.exports = {
     getAllPedidosConRelaciones,
     getPedidoConRelacionesPorId,
     postPedidoCompleto,
-    deletePedidoCompleto
+    putPedidoCompleto,
+    anularPedido
 }

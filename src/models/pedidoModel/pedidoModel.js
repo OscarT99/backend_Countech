@@ -60,7 +60,7 @@ const PedidoModel = sequelize.define('Pedido', {
     type: DataTypes.STRING,
     defaultValue: 'Registrado',
     validate: {
-      isIn: [['Registrado', 'En proceso', 'Terminado']],
+      isIn: [['Registrado', 'En proceso', 'Terminado',null]],
     },
   },
   estadoPago: {

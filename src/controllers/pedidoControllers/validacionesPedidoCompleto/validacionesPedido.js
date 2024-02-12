@@ -23,7 +23,7 @@ const validarPedido = async (body, res = response) => {
                      cliente: body.cliente                    
                     }
                      });
-            if (existingPedido) {
+            if (existingPedido & body.id == 0) {
                 return res.status(400).json({ error: 'La orden de trabajo ya está asociada al cliente especificado.' });
             }
 

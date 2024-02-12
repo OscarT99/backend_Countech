@@ -5,6 +5,8 @@ const DetalleEnCompra = require('../../models/compraModel/detalleCompraModel')
 const Insumo = require('../../models/insumoModel/insumoModel')
 
 const { validarCompra } = require('./validacionesCompraCompleto/validacionesCompra')
+const { restarCantidadInsumoCompra } = require('../insumoController/insumoController')
+
 
 const getAllComprasConRelaciones = async (req, res = response) => {
     try{
@@ -202,25 +204,36 @@ const putCompraCompleta = async (req, res = response, next) => {
 const anularCompra = async (req, res = response) => {
     try {
         const { id } = req.params;
-        const { estadoCompra, motivoDeAnulacion } = req.body; // Modificado para recibir el motivo de anulación
+        const { estadoCompra, motivoDeAnulacion } = req.body;
 
-        const compra = await Compra.findByPk(id);
+        const compra = await Compra.findByPk(id, {
+            include: [{ model: DetalleEnCompra, as: 'DetalleEnCompras' }]
+        });
 
         if (compra) {
-            if (compra.estadoCompra) {
-                compra.estadoCompra = false;
-                compra.motivoDeAnulacion = motivoDeAnulacion; 
-                await compra.save();
-                res.json({
-                    success: true,
-                    message: `La compra con número de factura ${compra.numeroFactura} fue anulada correctamente.`,
-                });
-            } else {
-                res.json({
+            if (!compra.estadoCompra) {
+                return res.json({
                     success: false,
                     error: `La compra con número de factura ${compra.numeroFactura} ya está anulada.`,
                 });
             }
+
+            // Actualizar el estado y motivo de anulación
+            compra.estadoPago = null;
+            compra.estadoCompra = false;
+            compra.motivoDeAnulacion = motivoDeAnulacion;
+            await compra.save();
+
+            // Decrementar la cantidad de insumo para cada detalle de la compra
+            for (const detalle of compra.DetalleEnCompras) {
+                // Utilizar el método importado
+                await restarCantidadInsumoCompra(detalle.insumo, detalle.cantidad);
+            }
+
+            res.json({
+                success: true,
+                message: `La compra con número de factura ${compra.numeroFactura} fue anulada correctamente.`,
+            });
         } else {
             res.status(404).json({
                 success: false,
@@ -235,6 +248,7 @@ const anularCompra = async (req, res = response) => {
         });
     }
 };
+
 
 
 module.exports = {

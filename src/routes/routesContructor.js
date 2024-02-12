@@ -17,6 +17,7 @@ const salidaInsumoRoute = require('./salidaInsumoRoute/salidaInsumoRoute')
 function configureRoutes(app, path) {
     app.use(path, clienteRoutes);
     app.use(path,proveedorRoutes);
+    app.use(path,categoriaInsumoRoute),
     app.use(path,insumoRoute),
     app.use(path, usuarioRoute);
     app.use(path, ventaRoute);

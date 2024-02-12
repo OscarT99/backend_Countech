@@ -41,7 +41,7 @@ const postAbonoCompra = async (req, res) => {
 
         if (compra) {
             // Verifica las condiciones antes de crear el abono
-            if (compra.formaPago === 'Crédito' && compra.estadoPago === 'Pendiente') {
+            if (compra.formaPago === 'Crédito' && compra.estadoPago === 'Pendiente' && compra.estadoCompra == true) {
                 // Crea el abono y asocia automáticamente la compra a través de la clave foránea
                 const nuevoAbono = await AbonoCompra.create(body);
 

@@ -47,7 +47,7 @@ const login = async(req, res = response) => {
                 }, (err, token ) => {
                     if(err){
                         console.log(err);
-                        reject('Nose pudo generar el token')
+                        reject('No se pudo generar el token')
                     }else{
                         resolve(token);
                     }
@@ -63,6 +63,7 @@ const login = async(req, res = response) => {
             usuario,
             token
         })
+        
     }catch(error){
         console.log(error)
         return res.status(500).json({

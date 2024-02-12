@@ -199,7 +199,6 @@ const putCompraCompleta = async (req, res = response, next) => {
     }
 };
 
-
 const anularCompra = async (req, res = response) => {
     try {
         const { id } = req.params;

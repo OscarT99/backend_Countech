@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../../database/config');
-// const ReferenciaEnPedido = require('./referenciaPedidoModel')
 const ColorProcesoReferenciaPedido = require('./colorProcesoReferenciaPedidoModel')
 const AsignarProceso =  require('../produccionModel/asignarProcedimiento') 
 

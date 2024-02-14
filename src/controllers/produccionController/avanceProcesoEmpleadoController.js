@@ -17,13 +17,13 @@ const getAllAvanceProcesos = async (req, res = response) => {
     }
   };
   
-  const getOneAvanceProceso = async (req, res = response) => {
+  const getOneAvanceProceso = async (req, res) => {
     try {
       const { id } = req.params;
-      const reporteProduccion = await ReporteProduccion.findByPk(id);
+      const avanceProcesoEmpleado = await AvanceProcesoEmpleado.findByPk(id);
   
-      if (reporteProduccion) {
-        res.json(reporteProduccion);
+      if (avanceProcesoEmpleado) {
+        res.json(avanceProcesoEmpleado);
       } else {
         res.json({
           msg: `No existe un reporte de producción con el id ${id}`,

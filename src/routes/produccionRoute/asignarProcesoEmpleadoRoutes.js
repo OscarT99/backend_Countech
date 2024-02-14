@@ -4,6 +4,7 @@ const router = express.Router();
 const AsignarProcesoEmpleado = require('../../controllers/produccionController/asignarProcesoEmpleadoController');
 
 router
+    .get('/asignarproceso/avance', AsignarProcesoEmpleado.getProcesoAvance)
     .get('/asignarprocesos', AsignarProcesoEmpleado.getAllAsignarProcesos)
     .get('/asignarproceso/:id', AsignarProcesoEmpleado.getOneAsignarProceso)
     .post('/asignarproceso', AsignarProcesoEmpleado.postAsignarProceso)

@@ -5,6 +5,26 @@ const PedidoProceso = require('../../models/pedidoModel/procesoReferenciaPedidoM
 const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProcesoEmpleado');
 
 
+  const getProcesoAvance = async (req, res = response) => {
+    try {
+      const { id } = req.params;
+      const data = await AsignarProcesoEmpleado.findAll({
+          include: [
+              {
+                  model: AvanceProcesoEmpleado,                    
+              },
+          ],
+      });
+        res.json({ProcesoAvances : data});
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({
+          success: false,
+          error: 'Ocurrió un error al obtener los procesos juntp con sus avances',
+      });
+  }
+  }
+
   const getAllAsignarProcesos = async (req, res = response) => {
     try {
       const data = await AsignarProcesoEmpleado.findAll();
@@ -118,6 +138,10 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
       const getAsignarProceso = await AsignarProcesoEmpleado.findByPk(id);
 
       if(!getAsignarProceso){
+          console.log(`No existe una asignación de proceso con el id ${id}`);
+      }
+
+      if(!getAsignarProceso){
         return res.status(404).json({
           msg: `No existe una asignación de proceso con el id ${id}`,
         });
@@ -227,6 +251,7 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
   
   module.exports = {
     getAllAsignarProcesos,
+    getProcesoAvance,
     getOneAsignarProceso,
     postAsignarProceso,
     putAnularProcesoAsignado,

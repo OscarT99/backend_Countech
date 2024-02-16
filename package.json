@@ -14,6 +14,7 @@
   "author": "CounTech",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -22,6 +23,8 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.6.3",
+    "nodemailer": "^6.9.9",
+    "rxjs": "^7.8.1",
     "sequelize": "^6.34.0",
     "sqlite3": "^5.1.7"
   },

@@ -32,11 +32,7 @@ const ProveedorModel = sequelize.define('Proveedor', {
     unique: true,
     validate: {
       customValidation(value) {
-        if (this.tipoIdentificacion === 'NIT') {
-          if (!/^\d{9}-\d$/.test(value)) {
-            throw new Error('Número de identificación no válido para NIT. Debe tener el formato "123456789-0".');
-          }
-        } else if (!/^\d{6,12}$/.test(value)) {
+        if (!/^\d{6,12}$/.test(value)) {
           throw new Error('Número de identificación no válido. Debe tener entre 6 y 12 caracteres numéricos.');
         }
       },
@@ -59,7 +55,7 @@ const ProveedorModel = sequelize.define('Proveedor', {
   ciudad: {
     type: DataTypes.STRING,
     validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
+      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ ]+/,
     },
   },
   direccion: {
@@ -67,9 +63,9 @@ const ProveedorModel = sequelize.define('Proveedor', {
   },
   contacto: {
     type: DataTypes.STRING,
-    validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
-    },
+    // validate: {
+    //   is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
+    // },
   },
   telefono: {
     type: DataTypes.STRING,

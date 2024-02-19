@@ -1,6 +1,8 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const { sequelize } = require('../../database/config');
 const AvanceProcesoEmpleado = require('./avanceProcesoEmpleado');
+
+
 const AsignarProcesoEmpleado = sequelize.define("asignarProcesoEmpleado", {
 
 

@@ -3,7 +3,7 @@ const AsignarProcesoEmpleado = require('../../models/produccionModel/asignarProc
 const Empleado = require('../../models/empleadoModel/empleadoModel')
 const PedidoProceso = require('../../models/pedidoModel/procesoReferenciaPedidoModel');
 const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProcesoEmpleado');
-
+const PedidoModel = require('../../models/pedidoModel/pedidoModel');
 
   const getProcesoAvance = async (req, res = response) => {
     try {
@@ -63,6 +63,8 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
 
       const getPedidoProceso = await PedidoProceso.findByPk(body.pedidoprocesoId);
 
+      const getPedido = await PedidoModel.findByPk(getPedidoProceso.pedido);
+
       const getEmpleado = await Empleado.findByPk(body.empleadoId);
 
 
@@ -93,19 +95,24 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
         return res.status(404).json({
           msg: `No existe un pedido con el id ${body.pedidoprocesoId}`,
         });
-      } 
-
+      }
 
       try{
 
         //Se crea la asignación de proceso
         await AsignarProcesoEmpleado.create(body);
+        
+        getPedido.update({
+          estado: 'En proceso'
+        });
 
         //Se actualiza el pedido proceso
         await getPedidoProceso.update({
           cantidadAsignada: getPedidoProceso.cantidadAsignada + body.cantidadAsignada,
           cantidadPendiente: getPedidoProceso.cantidadPendiente - body.cantidadAsignada,
-        })
+        });
+        
+        
 
         //Se actualiza el estado ocupado del empleado
         await getEmpleado.update({

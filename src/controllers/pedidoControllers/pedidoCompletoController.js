@@ -3,6 +3,8 @@ const Pedido = require('../../models/pedidoModel/pedidoModel');
 const Cliente = require('../../models/clienteModel/clienteModel');
 const ProcesoReferenciaPedido = require('../../models/pedidoModel/procesoReferenciaPedidoModel');
 const ColorProcesoReferenciaPedido = require('../../models/pedidoModel/colorProcesoReferenciaPedidoModel');
+const AsignarProcesoEmpleado = require('../../models/produccionModel/asignarProcesoEmpleado');
+const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProcesoEmpleado');
 
 const { validarPedido } = require('./validacionesPedidoCompleto/validacionesPedido')
 
@@ -19,6 +21,14 @@ const getAllPedidosConRelaciones = async (req, res = response) => {
                         {
                             model: ColorProcesoReferenciaPedido,                                    
                         },
+                        {
+                            model: AsignarProcesoEmpleado,
+                                include: [
+                                    {
+                                     model: AvanceProcesoEmpleado,
+                                    }
+                            ],                                    
+                        },
                     ],                    
                 },
             ],
@@ -34,6 +44,50 @@ const getAllPedidosConRelaciones = async (req, res = response) => {
     }
 };
 
+
+// NUEVO MÉTODO PARA TOKEN
+const getPedidoProcesos = async (req, res = response) => {
+    try {
+        const listaProcesos = await ProcesoReferenciaPedido.findAll({
+            include: [
+                {
+                    model: ColorProcesoReferenciaPedido,                                    
+                },
+            ],
+        });
+
+        res.json({ listaProcesos });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            error: 'Ocurrió un error al obtener la lista de procesos con sus respectivas relaciones',
+        });
+    }
+
+}
+
+const getPedidoProcesoById = async (req, res = response) => {
+    const { id } = req.params;
+
+    try{
+        const pedidoProceso = await ProcesoReferenciaPedido.findByPk(id);
+
+        if (!pedidoProceso) {
+            return res.status(404).json({ success: false, error: 'Proceso no encontrado.' });
+        }else{
+            res.json(pedidoProceso);
+        }
+    }catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            error: 'Ocurrió un error al obtener el proceso',
+        });
+    
+    }
+}
+
 const getPedidoConRelacionesPorId = async (req, res = response) => {
     const { id } = req.params;
 
@@ -45,11 +99,19 @@ const getPedidoConRelacionesPorId = async (req, res = response) => {
                 },                
                     {
                         model: ProcesoReferenciaPedido,
-                        include: [
+                        include: [                                
                             {
                                 model: ColorProcesoReferenciaPedido,                                    
                             },
-                        ],
+                            {
+                                model: AsignarProcesoEmpleado,
+                                    include: [
+                                        {
+                                         model: AvanceProcesoEmpleado,
+                                        }
+                                ],                                    
+                            },
+                        ], 
                     },                
             ],
         });
@@ -270,6 +332,8 @@ const anularPedido = async (req, res = response) => {
 module.exports = {
     getAllPedidosConRelaciones,
     getPedidoConRelacionesPorId,
+    getPedidoProcesos,
+    getPedidoProcesoById,
     postPedidoCompleto,
     putPedidoCompleto,
     anularPedido

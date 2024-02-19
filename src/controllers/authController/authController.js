@@ -135,10 +135,11 @@ const { async } = require('rxjs');
 
 
 const login = async (req, res = response) => {
+    
   const { email, contrasena } = req.body;
 
   try {
-    const usuario = await Usuario.findOne({ email });
+    const usuario = await Usuario.findOne({ where: { email: email } });
 
     
 

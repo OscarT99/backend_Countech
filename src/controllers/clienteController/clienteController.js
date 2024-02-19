@@ -150,9 +150,7 @@ const putCliente = async (req, res = response) => {
             return res.status(400).json({ error: 'El campo numeroIdentificacion es obligatorio.' });
         }
 
-        if (body.tipoIdentificacion === 'NIT' && !/^\d{9}-\d$/.test(body.numeroIdentificacion)) {
-            return res.status(400).json({ error: 'Número de identificación no válido para NIT. Debe tener el formato "123456789-0".' });
-        } else if (body.tipoIdentificacion !== 'NIT' && !/^\d{6,12}$/.test(body.numeroIdentificacion)) {
+        if (body.tipoIdentificacion && !/^\d{6,12}$/.test(body.numeroIdentificacion)) {
             return res.status(400).json({ error: 'Número de identificación no válido. Debe tener entre 6 y 12 caracteres numéricos.' });
         }
         
@@ -174,9 +172,9 @@ const putCliente = async (req, res = response) => {
             return res.status(400).json({ error: 'Ciudad no válida.' });
         }
 
-        if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.contacto)) {
-            return res.status(400).json({ error: 'Contacto no válido.' });
-        }
+        // if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.contacto)) {
+        //     return res.status(400).json({ error: 'Contacto no válido.' });
+        // }
 
         // if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/.test(body.correo)) {
         //     return res.status(400).json({ error: 'Correo no válido.' });

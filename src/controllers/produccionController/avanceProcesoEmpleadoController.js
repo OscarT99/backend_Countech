@@ -4,6 +4,7 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
 const PedidoProceso = require('../../models/pedidoModel/procesoReferenciaPedidoModel');
 const AsignarProcesoEmpleado = require('../../models/produccionModel/asignarProcesoEmpleado');
 const Empleado = require('../../models/empleadoModel/empleadoModel');
+const PedidoModel = require('../../models/pedidoModel/pedidoModel');
 
 const getAllAvanceProcesos = async (req, res = response) => {
     try {
@@ -42,8 +43,9 @@ const getAllAvanceProcesos = async (req, res = response) => {
       const { body } = req;
       const getAsignarProceso = await AsignarProcesoEmpleado.findByPk(body.asignarProcesoEmpleadoId)
       const getPedidoProceso = await PedidoProceso.findByPk(getAsignarProceso.pedidoprocesoId);
+      // const getPedidoProcesos = await PedidoProceso.findAll();
+      const getPedido = await PedidoModel.findByPk(getPedidoProceso.pedido);
       const getEmpleado = await Empleado.findByPk(getAsignarProceso.empleadoId);
-
 
 
       if (!getAsignarProceso) {
@@ -85,7 +87,9 @@ const getAllAvanceProcesos = async (req, res = response) => {
         await getAsignarProceso.update({
           cantRestante: getAsignarProceso.cantRestante - body.cantidadHecha,
         })
-      }}catch(err){
+      }
+    
+    }catch(err){
         console.log(err)
       }
 
@@ -112,7 +116,22 @@ const getAllAvanceProcesos = async (req, res = response) => {
           }catch(err){
             console.log(err)
           }
-        }} catch(err){
+        }
+        const validateProcesosTrue = await PedidoProceso.findAll({
+          where: {
+            pedido: getPedido.id,
+          }
+        });
+  
+  
+        const todosProcesosTerminados = await validateProcesosTrue.every(proceso => proceso.estado === true);
+
+  
+        if (todosProcesosTerminados) {
+          await getPedido.update({ estado: 'Terminado' });
+        }
+      
+      } catch(err){
         console.log(err)
       }
 

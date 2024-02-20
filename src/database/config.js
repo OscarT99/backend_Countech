@@ -5,7 +5,7 @@ const sequelize = new Sequelize({
     host:'localhost',
     username:'root',
     password:'OscarT.99',
-    database:'countechOscar'
+    database:'countech'
 })
 
 // const sequelize = new Sequelize('sqlite::memory:')

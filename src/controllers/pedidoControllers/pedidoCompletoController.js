@@ -44,6 +44,19 @@ const getAllPedidosConRelaciones = async (req, res = response) => {
     }
 };
 
+const getPedidoInfo = async (req, res = response) => {
+    try{
+        const listaPedidoInfo = await Pedido.findAll();
+
+        res.json({ listaPedidoInfo });
+    }catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            error: 'Ocurrió un error al obtener la lista de pedidos',
+        });
+}
+}
 
 // NUEVO MÉTODO PARA TOKEN
 const getPedidoProcesos = async (req, res = response) => {
@@ -244,6 +257,7 @@ module.exports = {
     getAllPedidosConRelaciones,
     getPedidoConRelacionesPorId,
     getPedidoProcesos,
+    getPedidoInfo,
     getPedidoProcesoById,
     postPedidoCompleto,
     deletePedidoCompleto

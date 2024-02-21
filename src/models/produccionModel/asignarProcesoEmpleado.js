@@ -54,7 +54,7 @@ const AsignarProcesoEmpleado = sequelize.define("asignarProcesoEmpleado", {
     //   },  
     // },
   },
-
+  
   estadoAnular: {
     type: DataTypes.BOOLEAN,
     allownull: false,

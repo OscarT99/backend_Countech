@@ -6,7 +6,7 @@ const ProveedorModel = sequelize.define('Proveedor', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isIn: [['Persona', 'Empresa']],
+      isIn: [['Persona jurídica', 'Persona natural']],
     },
   },
   tipoIdentificacion: {
@@ -15,7 +15,6 @@ const ProveedorModel = sequelize.define('Proveedor', {
     validate: {
       isIn: [
         [
-          'Registro civil',
           'Tarjeta de identidad',
           'Cédula de ciudadanía',
           'Tarjeta de extranjería',
@@ -41,16 +40,10 @@ const ProveedorModel = sequelize.define('Proveedor', {
   razonSocial: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
-    },
   },
   nombreComercial: {
     type: DataTypes.STRING,
     allowNull: false,
-    validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
-    },
   },
   ciudad: {
     type: DataTypes.STRING,
@@ -63,9 +56,6 @@ const ProveedorModel = sequelize.define('Proveedor', {
   },
   contacto: {
     type: DataTypes.STRING,
-    // validate: {
-    //   is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
-    // },
   },
   telefono: {
     type: DataTypes.STRING,

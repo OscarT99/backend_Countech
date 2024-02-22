@@ -6,7 +6,7 @@ const ClienteModel = sequelize.define('Cliente', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isIn: [['Persona', 'Empresa']],
+      isIn: [['Persona jurídica', 'Persona natural']],
     },
   },
   tipoIdentificacion: {
@@ -14,7 +14,6 @@ const ClienteModel = sequelize.define('Cliente', {
     allowNull: false,
     validate: {
       isIn: [[
-        'Registro civil',
         'Tarjeta de identidad',
         'Cédula de ciudadanía',
         'Tarjeta de extranjería',
@@ -38,17 +37,11 @@ const ClienteModel = sequelize.define('Cliente', {
   },
   razonSocial: {
     type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
-    },
+    allowNull: false    
   },
   nombreComercial: {
     type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
-    },
+    allowNull: false,    
   },
   ciudad: {
     type: DataTypes.STRING,
@@ -62,9 +55,6 @@ const ClienteModel = sequelize.define('Cliente', {
   },
   contacto: {
     type: DataTypes.STRING,
-    // validate: {
-    //   is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ ]+/,
-    // },
   },
   telefono: {
     type: DataTypes.STRING,

@@ -9,7 +9,7 @@ router
     .get('/empleados', getAllEmpleados)
     .get('/empleado/:id' , getOneEmpleado)
     .post('/empleado', createValidator, postEmpleado)
-    .put('/empleado/:id', putCambiarEstadoEmpleado)
+    .put('/empleado/estado/:id', putCambiarEstadoEmpleado)
     .put('/empleado/:id', putEmpleado)
 
 module.exports = router

@@ -37,7 +37,13 @@ const getAllEmpleados = async (req, res) => {
 const getOneEmpleado = async (req, res) => {
   try {
     const { id } = req.params;
-    const empleado = await Empleado.findByPk(id);
+    const empleado = await Empleado.findByPk(id, {
+      include: [
+        {
+          model: AsignarProcesoEmpleado,
+        },
+      ],
+    });
 
     if (empleado) {
       res.json(empleado);

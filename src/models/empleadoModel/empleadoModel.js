@@ -7,6 +7,7 @@ const Empleado = sequelize.define("empleados", {
   tipoIdentidad: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate:{
     isIn: {
       args: [[
       'Cédula de ciudadanía', 
@@ -15,7 +16,7 @@ const Empleado = sequelize.define("empleados", {
       'Pasaporte'
       ]],
       msg: 'Tipo de identificación no válido.',
-    }
+    }}
   },
 
   numIdentidad: {

@@ -3,10 +3,11 @@ const { validarJWT } = require('../../middlewares/validar-jwt')
 
 const route = Router()
 
-const { getAllPedidosConRelaciones, getPedidoProcesos, getPedidoProcesoById, postPedidoCompleto, getPedidoConRelacionesPorId, putPedidoCompleto, anularPedido } = require('../../controllers/pedidoControllers/pedidoCompletoController')
+const { getAllPedidosConRelaciones, getPedidoProcesos, getPedidoInfo, getPedidoProcesoById, postPedidoCompleto, getPedidoConRelacionesPorId, putPedidoCompleto, anularPedido } = require('../../controllers/pedidoControllers/pedidoCompletoController')
 
 
 route.get('/pedido',getAllPedidosConRelaciones);
+route.get('/pedido/info',getPedidoInfo);
 route.get('/pedido/proceso',getPedidoProcesos);
 route.get('/pedido/proceso/:id',getPedidoProcesoById);
 route.get('/pedido/:id',getPedidoConRelacionesPorId); 

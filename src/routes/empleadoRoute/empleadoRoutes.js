@@ -22,8 +22,8 @@ router
     .get('/empleado/proceso', getEmpleadoProceso)
     .get('/empleados', getAllEmpleados)
     .get('/empleado/:id' , getOneEmpleado)
-    .post('/empleado', createValidator, postEmpleado)
-    .put('/empleado/:id', putCambiarEstadoEmpleado)
+    .post('/empleado', postEmpleado)
+    .put('/empleado/estado/:id', putCambiarEstadoEmpleado)
     .put('/empleado/:id', putEmpleado)
 
 module.exports = router

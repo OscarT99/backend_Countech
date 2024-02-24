@@ -135,7 +135,7 @@ async function forgotPassword(req, res) {
         <p>Estimado(a) Usuario,</p>
         <p>Recientemente ha solicitado cambiar su contraseña en nuestra plataforma.</p>
         <p>A continuación de le proporciona un enlace para restablecer su contraseña.</p>
-        <a href="http://localhost:8083/api/auth/cambiar-contrasena/${resetToken}" style="font-size:15px">Haga click en el enlace</a>
+        <a href="http://localhost:4200/#/cambiar-contrasena/${resetToken}" style="font-size:15px">Haga click en el enlace</a>
         <p>Porfa favor, utilice este enlace para restablecer su contraseña y poder acceder al aplicativo con su cuenta.</p>
         <p>Si usted no realizó esta solicitud, por favor haga caso omiso a este correo.</p>
         <p>Atentamente,</p>

@@ -1,7 +1,12 @@
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('db_project_v1', 'root', 'password', {
-    host: 'localhost',
+// const sequelize = new Sequelize('db_project_v1', 'root', 'admin', {
+//     host: 'localhost',
+//     dialect: 'mysql'
+//   });
+
+  const sequelize = new Sequelize('badpemy6pvkpispmud7x', 'ufp3tu02c71vgclc', 'rHh2aYVRSyTPcYsPVCrK', {
+    host: 'badpemy6pvkpispmud7x-mysql.services.clever-cloud.com',
     dialect: 'mysql'
   });
 

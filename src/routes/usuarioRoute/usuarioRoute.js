@@ -11,9 +11,7 @@ route.get('/usuario', [
  route.get('/usuario/:id', [
     validarJWT
  ],getUsuario)
- route.post('/usuario', [
-    validarJWT
- ],postUsuario)
+ route.post('/usuario',postUsuario)
  route.put('/usuario/:id', [
     validarJWT
  ],putUsuario);

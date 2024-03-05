@@ -42,14 +42,13 @@ const postProveedor = async (req, res = response) => {
 
         if (!body.tipoProveedor) {
             return res.status(400).json({ error: 'El campo tipoProveedor es obligatorio.' });
-        } else if (!['Persona', 'Empresa'].includes(body.tipoProveedor)) {
-            return res.status(400).json({ error: 'El tipo de proveedor debe ser "Persona" o "Empresa".' });
+        } else if (!['Persona jurídica', 'Persona natural'].includes(body.tipoProveedor)) {
+            return res.status(400).json({ error: 'El tipo de proveedor debe ser "Persona jurídica" o "Persona natural".' });
         }
 
         if (!body.tipoIdentificacion) {
             return res.status(400).json({ error: 'El campo tipoIdentificacion es obligatorio.' });
         } else if (![
-            'Registro civil',
             'Tarjeta de identidad',
             'Cédula de ciudadanía',
             'Tarjeta de extranjería',
@@ -64,9 +63,7 @@ const postProveedor = async (req, res = response) => {
             return res.status(400).json({ error: 'El campo numeroIdentificacion es obligatorio.' });
         }
 
-        if (body.tipoIdentificacion === 'NIT' && !/^\d{9}-\d$/.test(body.numeroIdentificacion)) {
-            return res.status(400).json({ error: 'Número de identificación no válido para NIT. Debe tener el formato "123456789-0".' });
-        } else if (body.tipoIdentificacion !== 'NIT' && !/^\d{6,12}$/.test(body.numeroIdentificacion)) {
+        if (body.tipoIdentificacion && !/^\d{6,12}$/.test(body.numeroIdentificacion)) {
             return res.status(400).json({ error: 'Número de identificación no válido. Debe tener entre 6 y 12 caracteres numéricos.' });
         }
 
@@ -78,14 +75,10 @@ const postProveedor = async (req, res = response) => {
 
         if (!body.razonSocial) {
             return res.status(400).json({ error: 'El campo razonSocial es obligatorio.' });
-        } else if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.razonSocial)) {
-            return res.status(400).json({ error: 'Razón social no válida.' });
         }
 
         if (!body.nombreComercial) {
             return res.status(400).json({ error: 'El campo nombreComercial es obligatorio.' });
-        } else if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.nombreComercial)) {
-            return res.status(400).json({ error: 'Nombre comercial no válido.' });
         }
 
         if (!body.ciudad) {
@@ -93,11 +86,7 @@ const postProveedor = async (req, res = response) => {
         } else if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.ciudad)) {
             return res.status(400).json({ error: 'Ciudad no válida.' });
         }
-                
-        // if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/.test(body.correo)) {
-        //     return res.status(400).json({ error: 'Correo no válido.' });
-        // }
-               
+
         await Proveedor.create(body);
 
         res.status(201).json({
@@ -124,14 +113,13 @@ const putProveedor = async (req, res = response) => {
 
         if (!body.tipoProveedor) {
             return res.status(400).json({ error: 'El campo tipoProveedor es obligatorio.' });
-        } else if (!['Empresa', 'Persona'].includes(body.tipoProveedor)) {
-            return res.status(400).json({ error: 'El tipo de proveedor debe ser "Empresa" o "Persona".' });
+        } else if (!['Persona jurídica', 'Persona natural'].includes(body.tipoProveedor)) {
+            return res.status(400).json({ error: 'El tipo de proveedor debe ser "Persona jurídica" o "Persona natural".' });
         }
 
         if (!body.tipoIdentificacion) {
             return res.status(400).json({ error: 'El campo tipoIdentificacion es obligatorio.' });
         } else if (![
-            'Registro civil',
             'Tarjeta de identidad',
             'Cédula de ciudadanía',
             'Tarjeta de extranjería',
@@ -146,23 +134,17 @@ const putProveedor = async (req, res = response) => {
             return res.status(400).json({ error: 'El campo numeroIdentificacion es obligatorio.' });
         }
 
-        if (body.tipoIdentificacion === 'NIT' && !/^\d{9}-\d$/.test(body.numeroIdentificacion)) {
-            return res.status(400).json({ error: 'Número de identificación no válido para NIT. Debe tener el formato "123456789-0".' });
-        } else if (body.tipoIdentificacion !== 'NIT' && !/^\d{6,12}$/.test(body.numeroIdentificacion)) {
+        if (body.tipoIdentificacion  && !/^\d{6,12}$/.test(body.numeroIdentificacion)) {
             return res.status(400).json({ error: 'Número de identificación no válido. Debe tener entre 6 y 12 caracteres numéricos.' });
         }
         
         if (!body.razonSocial) {
             return res.status(400).json({ error: 'El campo razonSocial es obligatorio.' });
-        } else if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.razonSocial)) {
-            return res.status(400).json({ error: 'Razón social no válida.' });
-        }
+        } 
 
         if (!body.nombreComercial) {
             return res.status(400).json({ error: 'El campo nombreComercial es obligatorio.' });
-        } else if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.nombreComercial)) {
-            return res.status(400).json({ error: 'Nombre comercial no válido.' });
-        }
+        } 
 
         if (!body.ciudad) {
             return res.status(400).json({ error: 'El campo ciudad es obligatorio.' });
@@ -170,10 +152,6 @@ const putProveedor = async (req, res = response) => {
             return res.status(400).json({ error: 'Ciudad no válida.' });
         }
 
-        // if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/.test(body.correo)) {
-        //     return res.status(400).json({ error: 'Correo no válido.' });
-        // }
-        
         await proveedor.update(body);
 
         res.status(200).json({
@@ -188,7 +166,6 @@ const putProveedor = async (req, res = response) => {
         });
     }
 }
-
 
 const buscarProveedores = async (req, res = response) => {
     try {

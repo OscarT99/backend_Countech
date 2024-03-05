@@ -4,9 +4,19 @@ const sequelize = new Sequelize({
     dialect:'mysql',
     host:'localhost',
     username:'root',
-    password:'11234',
-    database:'countech2'
+    password:'OscarT.99',
+    database:'countech'
 })
+
+// const sequelize = new Sequelize('db_project_v1', 'root', 'admin', {
+//     host: 'localhost',
+//     dialect: 'mysql'
+//   });
+
+//   const sequelize = new Sequelize('badpemy6pvkpispmud7x', 'ufp3tu02c71vgclc', 'rHh2aYVRSyTPcYsPVCrK', {
+//     host: 'badpemy6pvkpispmud7x-mysql.services.clever-cloud.com',
+//     dialect: 'mysql'
+//   });
 
 // const sequelize = new Sequelize('sqlite::memory:')
 

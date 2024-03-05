@@ -52,6 +52,49 @@ const getPedidoProdCompleto = async (req, res = response) => {
     }
 };
 
+
+const getPedidoProdMobile = async (req, res = response) => {
+    try {
+        const data = await Pedido.findAll({
+            include: [
+                {
+                    model: Cliente,                    
+                },
+                {                    
+                    model: ProcesoReferenciaPedido,
+                    include: [
+                        {
+                            model: AsignarProcesoEmpleado,
+                            include: [
+                                // {
+                                //     model: Empleado,
+                                //     attributes: ['nombre', 'apellido'], // Seleccionar los campos nombre y apellido
+                                // },
+                                {
+                                    model: AvanceProcesoEmpleado,
+                                }
+                            ]
+                        },
+                        {
+                            model: ColorProcesoReferenciaPedido,
+                        }
+                    ],                
+                },
+            ],
+        });
+
+        res.json(data);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            error: 'Ocurrió un error al obtener la lista de pedidos con sus respectivas relaciones',
+        });
+    }
+};
+
+
 module.exports = {
     getPedidoProdCompleto,
+    getPedidoProdMobile
 };

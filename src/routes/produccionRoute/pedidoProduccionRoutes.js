@@ -4,6 +4,8 @@ const router = express.Router();
 
 router
     .get('/pedidoproduccion', PedidoProdCompleto.getPedidoProdCompleto)
+    .get('/produccion/mobile', PedidoProdCompleto.getPedidoProdMobile)
+
     // .get('/avanceproceso/:id', PedidoProduccion.getOneAvanceProceso)
     // .post('/pedidoproceso', PedidoProceso.postPedidoProceso)
     // .put('/avanceproceso/:id', PedidoProduccion.putAvanceProceso)

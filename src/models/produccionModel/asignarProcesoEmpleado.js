@@ -1,6 +1,9 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const { sequelize } = require('../../database/config');
 const AvanceProcesoEmpleado = require('./avanceProcesoEmpleado');
+// const Empleado = require('../empleadoModel/empleadoModel');
+
+
 const AsignarProcesoEmpleado = sequelize.define("asignarProcesoEmpleado", {
 
 
@@ -52,7 +55,7 @@ const AsignarProcesoEmpleado = sequelize.define("asignarProcesoEmpleado", {
     //   },  
     // },
   },
-
+  
   estadoAnular: {
     type: DataTypes.BOOLEAN,
     allownull: false,
@@ -72,4 +75,6 @@ const AsignarProcesoEmpleado = sequelize.define("asignarProcesoEmpleado", {
 );
 
 AsignarProcesoEmpleado.hasMany(AvanceProcesoEmpleado, { foreignKey: 'asignarProcesoEmpleadoId' });
+// AsignarProcesoEmpleado.belongsTo(Empleado, { foreignKey: 'empleadoId' });
+
 module.exports = AsignarProcesoEmpleado;

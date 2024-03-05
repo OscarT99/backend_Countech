@@ -1,9 +1,16 @@
 const { response } = require('express');
-const SalidaInsumo = require('../../models/salidaInsumoModel/salidaInsumoModel')
+const SalidaInsumo = require('../../models/salidaInsumoModel/salidaInsumoModel');
+const InsumoModel = require('../../models/insumoModel/insumoModel');
 
 const getSalidasDeInsumo = async(req, res = response) => {
     try{
-        const listSalidasDeInsumo = await SalidaInsumo.findAll()
+        const listSalidasDeInsumo = await SalidaInsumo.findAll({
+            include: [
+                {
+                    model: InsumoModel,                    
+                }
+            ]
+        })
         res.json({ listSalidasDeInsumo })
     }catch(error){
         console.log(error);

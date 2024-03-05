@@ -3,7 +3,27 @@ const AsignarProcesoEmpleado = require('../../models/produccionModel/asignarProc
 const Empleado = require('../../models/empleadoModel/empleadoModel')
 const PedidoProceso = require('../../models/pedidoModel/procesoReferenciaPedidoModel');
 const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProcesoEmpleado');
+const PedidoModel = require('../../models/pedidoModel/pedidoModel');
 
+  const getProcesoAvance = async (req, res = response) => {
+    try {
+      const { id } = req.params;
+      const data = await AsignarProcesoEmpleado.findAll({
+          include: [
+              {
+                  model: AvanceProcesoEmpleado,                    
+              },
+          ],
+      });
+        res.json({ProcesoAvances : data});
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({
+          success: false,
+          error: 'Ocurrió un error al obtener los procesos juntp con sus avances',
+      });
+  }
+  }
 
   const getAllAsignarProcesos = async (req, res = response) => {
     try {
@@ -43,6 +63,8 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
 
       const getPedidoProceso = await PedidoProceso.findByPk(body.pedidoprocesoId);
 
+      const getPedido = await PedidoModel.findByPk(getPedidoProceso.pedido);
+
       const getEmpleado = await Empleado.findByPk(body.empleadoId);
 
 
@@ -73,19 +95,24 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
         return res.status(404).json({
           msg: `No existe un pedido con el id ${body.pedidoprocesoId}`,
         });
-      } 
-
+      }
 
       try{
 
         //Se crea la asignación de proceso
         await AsignarProcesoEmpleado.create(body);
+        
+        getPedido.update({
+          estado: 'En proceso'
+        });
 
         //Se actualiza el pedido proceso
         await getPedidoProceso.update({
           cantidadAsignada: getPedidoProceso.cantidadAsignada + body.cantidadAsignada,
           cantidadPendiente: getPedidoProceso.cantidadPendiente - body.cantidadAsignada,
-        })
+        });
+        
+        
 
         //Se actualiza el estado ocupado del empleado
         await getEmpleado.update({
@@ -116,6 +143,10 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
       const { estadoAnular } = body
       const { id } = req.params;
       const getAsignarProceso = await AsignarProcesoEmpleado.findByPk(id);
+
+      if(!getAsignarProceso){
+          console.log(`No existe una asignación de proceso con el id ${id}`);
+      }
 
       if(!getAsignarProceso){
         return res.status(404).json({
@@ -227,6 +258,7 @@ const AvanceProcesoEmpleado = require('../../models/produccionModel/avanceProces
   
   module.exports = {
     getAllAsignarProcesos,
+    getProcesoAvance,
     getOneAsignarProceso,
     postAsignarProceso,
     putAnularProcesoAsignado,

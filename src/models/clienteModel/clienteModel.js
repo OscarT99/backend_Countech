@@ -6,7 +6,7 @@ const ClienteModel = sequelize.define('Cliente', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isIn: [['Persona', 'Empresa']],
+      isIn: [['Persona jurídica', 'Persona natural']],
     },
   },
   tipoIdentificacion: {
@@ -14,7 +14,6 @@ const ClienteModel = sequelize.define('Cliente', {
     allowNull: false,
     validate: {
       isIn: [[
-        'Registro civil',
         'Tarjeta de identidad',
         'Cédula de ciudadanía',
         'Tarjeta de extranjería',
@@ -30,11 +29,7 @@ const ClienteModel = sequelize.define('Cliente', {
     unique: true,
     validate: {
       customValidation(value) {
-        if (this.tipoIdentificacion === 'NIT') {
-          if (!/^\d{9}-\d$/.test(value)) {
-            throw new Error('Número de identificación no válido para NIT. Debe tener el formato "123456789-0".');
-          }
-        } else if (!/^\d{6,12}$/.test(value)) {
+        if (!/^\d{6,12}$/.test(value)) {
           throw new Error('Número de identificación no válido. Debe tener entre 6 y 12 caracteres numéricos.');
         }
       },
@@ -42,23 +37,17 @@ const ClienteModel = sequelize.define('Cliente', {
   },
   razonSocial: {
     type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
-    },
+    allowNull: false    
   },
   nombreComercial: {
     type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
-    },
+    allowNull: false,    
   },
   ciudad: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
+      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ ]+/,
     },
   },
   direccion: {
@@ -66,9 +55,6 @@ const ClienteModel = sequelize.define('Cliente', {
   },
   contacto: {
     type: DataTypes.STRING,
-    validate: {
-      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+/,
-    },
   },
   telefono: {
     type: DataTypes.STRING,

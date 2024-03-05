@@ -7,17 +7,29 @@ const Usuario = sequelize.define('Usuario', {
     type: DataTypes.STRING(50),
     allowNull: false,
     validate: {
-      is: /^[A-Za-z ]+/,
+      is: /^[A-Za-záéíóúüÜÁÉÍÓÑñ ]+/,
+      len: {
+        args: [6, 50],
+        msg: 'El nombre debe tener al menos 6 caracteres',
+      },
     },
   },
+  
   cedula: {
     type: DataTypes.STRING(10),
     allowNull: false,
-    validate: {
-      is: /^[0-9]+/,
-    },
     unique: true,
+    validate: {
+      isNumeric: {
+        msg: 'La cédula debe contener solo números',
+      },
+      len: {
+        args: [8, 10],
+        msg: 'La cédula debe tener entre 8 y 10 caracteres',
+      },
+    },
   },
+  
   email: {
     type: DataTypes.STRING(180),
     allowNull: false,

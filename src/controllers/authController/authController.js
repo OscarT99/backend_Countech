@@ -8,35 +8,49 @@ const { async } = require('rxjs');
 
 
 const login = async (req, res = response) => {
-    
+
   const { email, contrasena } = req.body;
+  const validacionCorreo = /^[a-zA-Z0-9._%-ñÑáéíóúÁÉÍÓÚ]+@[a-zA-Z0-9.-]+\.(com|co|org|net|edu)$/;
+
+
+
+  if (!email || !email.trim()) {
+    return res.status(400).json({ error: 'El campo email es necesario para iniciar sesión.' });
+  }
+  if (!validacionCorreo.test(email)) {
+    return res.status(400).json({ error: "El email debe tener una estructura válida." });
+  }
+
+  if (!contrasena || !contrasena.trim()) {
+    return res.status(400).json({ error: 'El campo contraseña es necesario para iniciar sesión.' });
+  }
+
+
 
   try {
     const usuario = await Usuario.findOne({ where: { email: email } });
 
-    
-
-    if ( !usuario){
-        return res.status(400).json({
-            msg: 'Email-Contraseña invalidos (email)'
-        })
+    if (!usuario) {
+      return res.status(400).json({
+        msg: 'Email-Contraseña invalidos (email)'
+      })
     }
 
     //verificar que el usuario este activo
-    if ( !usuario.estado){
-        return res.status(400).json({
-            msg: 'El usuario no se encuentra activo'
-        })
+    if (!usuario.estado) {
+      return res.status(400).json({
+        msg: 'El usuario no se encuentra activo'
+      })
     }
 
 
 
     //verificar contraseña
-    const validContrasena = bcrypt.compareSync( contrasena, usuario.contrasena);
-    if ( !validContrasena){
-        return res.status(400).json({
-            msg: 'Email-Contraseña invalidos (contraseña)'
-        })
+    const validContrasena = bcrypt.compareSync(contrasena, usuario.contrasena);
+    if (!validContrasena) {
+      return res.status(400).json({
+        msg: 'Email-Contraseña invalidos (contraseña)'
+      })
     }
 
 
@@ -47,6 +61,7 @@ const login = async (req, res = response) => {
       usuario,
       token
     });
+
   } catch (error) {
     console.error('Error en la autenticación:', error);
     return res.status(500).json({
@@ -77,22 +92,22 @@ const transporter = nodemailer.createTransport({
 
 
 async function sendEmail(email, mailOptions) {
-    try {
-      // Verifica si el usuario con el correo proporcionado existe
-      const usuario = await Usuario.findOne({ where: { email } });
-  
-      if (!usuario) {
-        return { success: false, message: 'Usuario no encontrado.' };
-      }
-      const resetToken = generateResetToken();
-  
-      await transporter.sendMail(mailOptions);
-  
-      return { success: true, message: 'Se ha enviado un enlace para restablecer la contraseña, revisa el correo.' };
-    } catch (error) {
-      console.error('Error al recuperar la contraseña:', error);
-      return { success: false, message: 'Error al recuperar la contraseña.' };
+  try {
+    // Verifica si el usuario con el correo proporcionado existe
+    const usuario = await Usuario.findOne({ where: { email } });
+
+    if (!usuario) {
+      return { success: false, message: 'Usuario no encontrado.' };
     }
+    const resetToken = generateResetToken();
+
+    await transporter.sendMail(mailOptions);
+
+    return { success: true, message: 'Se ha enviado un enlace para restablecer la contraseña, revisa el correo.' };
+  } catch (error) {
+    console.error('Error al recuperar la contraseña:', error);
+    return { success: false, message: 'Error al recuperar la contraseña.' };
+  }
 }
 
 
@@ -201,7 +216,7 @@ async function searchUser(req, res) {
     valorBuscar.nombre = nombre;
   }
 
- 
+
   if (email) {
     if (!validacionCorreo.test(email)) {
       return res.status(500).json({ error: "El correo debe tener una estructura válida." });

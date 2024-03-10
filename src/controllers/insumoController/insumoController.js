@@ -39,13 +39,13 @@ const getInsumo = async (req, res = response) => {
 const postInsumo = async (req, res = response) => {
     try {
         const { body } = req;
-        
+
         if (!body.nombre) {
             return res.status(400).json({ success: false, error: 'El campo nombre es obligatorio.' });
         } else if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.nombre)) {
             return res.status(400).json({ success: false, error: 'Nombre no válido. Solo se permiten letras, tildes y espacios.' });
         }
-        
+
         const existingInsumo = await Insumo.findOne({ where: { nombre: body.nombre } });
         if (existingInsumo) {
             return res.status(400).json({ success: false, error: 'El nombre del insumo ya existe.' });
@@ -54,7 +54,7 @@ const postInsumo = async (req, res = response) => {
         if (body.cantidad !== undefined && !/^\d+$/.test(body.cantidad)) {
             return res.status(400).json({ success: false, error: 'Cantidad no válida. Solo se permiten números.' });
         }
-                        
+
         await Insumo.create(body);
         res.status(201).json({
             success: true,
@@ -75,17 +75,12 @@ const putInsumo = async (req, res = response) => {
         const { id } = req.params;
         const insumo = await Insumo.findByPk(id);
 
-        if (insumo) {                
+        if (insumo) {
             if (!body.nombre) {
                 return res.status(400).json({ success: false, error: 'El campo nombre es obligatorio.' });
             } else if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.nombre)) {
                 return res.status(400).json({ success: false, error: 'Nombre no válido. Solo se permiten letras, tildes y espacios.' });
             }
-            
-            
-            if (body.cantidad !== undefined && !/^\d+$/.test(body.cantidad)) {
-                return res.status(400).json({ success: false, error: 'Cantidad no válida. Solo se permiten números.' });
-            }                
 
             await insumo.update(body);
             res.json({
@@ -146,61 +141,61 @@ const buscarInsumos = async (req, res = response) => {
 
 const sumarCantidadInsumo = async (req, res = response) => {
     try {
-      const { id } = req.params;
-      const { nuevaCantidad } = req.body;
-      const insumo = await Insumo.findByPk(id);
-  
-      if (insumo) {
+        const { id } = req.params;
+        const { nuevaCantidad } = req.body;
+        const insumo = await Insumo.findByPk(id);
+
+        if (insumo) {
             insumo.cantidad += nuevaCantidad;
             await insumo.save();
-  
-          res.json({
-            success: true,
-            message: 'Cantidad de insumo actualizada correctamente.',
-          });
-        
-      } else {
-        res.status(404).json({
-          success: false,
-          error: `No existe un insumo con el id ${id}`,
-        });
-      }
+
+            res.json({
+                success: true,
+                message: 'Cantidad de insumo actualizada correctamente.',
+            });
+
+        } else {
+            res.status(404).json({
+                success: false,
+                error: `No existe un insumo con el id ${id}`,
+            });
+        }
     } catch (error) {
-      console.error('Error al actualizar la cantidad del insumo:', error);
-      res.status(500).json({
-        success: false,
-        error: 'Ocurrió un problema al actualizar la cantidad del insumo',
-      });
+        console.error('Error al actualizar la cantidad del insumo:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Ocurrió un problema al actualizar la cantidad del insumo',
+        });
     }
 };
 
 const restarCantidadInsumo = async (req, res = response) => {
     try {
-      const { id } = req.params;
-      const { nuevaCantidad } = req.body;
-      const insumo = await Insumo.findByPk(id);
-  
-      if (insumo) {
+        const { id } = req.params;
+        const { nuevaCantidad } = req.body;
+        const insumo = await Insumo.findByPk(id);
+
+        if (insumo) {
             insumo.cantidad -= nuevaCantidad;
             await insumo.save();
-  
-          res.json({
-            success: true,
-            message: 'Cantidad de insumo actualizada correctamente.',
-          });
-        
-      } else {
-        res.status(404).json({
-          success: false,
-          error: `No existe un insumo con el id ${id}`,
-        });
-      }
+
+            res.json({
+                success: true,
+                message: 'Cantidad de insumo actualizada correctamente.',
+            });
+
+        } else {
+            res.status(404).json({
+                success: false,
+                error: `No existe un insumo con el id ${id}`,
+            });
+        }
     } catch (error) {
-      console.error('Error al actualizar la cantidad del insumo:', error);
-      res.status(500).json({
-        success: false,
-        error: 'Ocurrió un problema al actualizar la cantidad del insumo',
-      });
+        console.error('Error al actualizar la cantidad del insumo:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Ocurrió un problema al actualizar la cantidad del insumo',
+        });
     }
 };
 
@@ -245,7 +240,7 @@ const actualizarEstadoInsumo = async (req, res = response) => {
         });
     }
 };
-  
+
 module.exports = {
     getInsumos,
     getInsumo,

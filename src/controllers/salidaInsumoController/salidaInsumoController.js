@@ -2,34 +2,34 @@ const { response } = require('express');
 const SalidaInsumo = require('../../models/salidaInsumoModel/salidaInsumoModel');
 const InsumoModel = require('../../models/insumoModel/insumoModel');
 
-const getSalidasDeInsumo = async(req, res = response) => {
-    try{
+const getSalidasDeInsumo = async (req, res = response) => {
+    try {
         const listSalidasDeInsumo = await SalidaInsumo.findAll({
             include: [
                 {
-                    model: InsumoModel,                    
+                    model: InsumoModel,
                 }
             ]
         })
         res.json({ listSalidasDeInsumo })
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
             error: 'Ocurrió un error al obtener la salida de los insumos',
         });
     }
-} 
+}
 
-const postSalidaDeInsumo = async(req, res = response) => {
-    try{
+const postSalidaDeInsumo = async (req, res = response) => {
+    try {
         const { body } = req;
-        
-        if(!body.insumo){
+
+        if (!body.insumo) {
             return res.status(400).json({ success: false, error: 'El campo insumo es obligatorio.' });
         }
 
-        if(!body.cantidad){
+        if (!body.cantidad) {
             return res.status(400).json({ success: false, error: 'El campo cantidad es obligatorio.' });
         }
         if (!body.tipoDeMaquina) {
@@ -44,7 +44,7 @@ const postSalidaDeInsumo = async(req, res = response) => {
             message: 'Salida de insumo registrada con éxito.',
         });
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
@@ -55,5 +55,5 @@ const postSalidaDeInsumo = async(req, res = response) => {
 
 module.exports = {
     getSalidasDeInsumo,
-    postSalidaDeInsumo    
+    postSalidaDeInsumo
 }

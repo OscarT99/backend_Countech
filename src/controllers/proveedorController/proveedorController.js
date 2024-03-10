@@ -1,11 +1,11 @@
 const { response } = require('express');
 const Proveedor = require('../../models/proveedorModel/proveedorModel');
 
-const getProveedores = async (req, res = response) =>{
-    try{
+const getProveedores = async (req, res = response) => {
+    try {
         const listProveedores = await Proveedor.findAll();
         res.json({ listProveedores });
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
@@ -15,29 +15,29 @@ const getProveedores = async (req, res = response) =>{
 }
 
 const getProveedor = async (req, res = response) => {
-    try{
+    try {
         const { id } = req.params;
         const proveedor = await Proveedor.findByPk(id);
 
-        if(proveedor){
+        if (proveedor) {
             res.json(proveedor);
-        }else{
+        } else {
             res.status(404).json({
                 success: false,
                 error: `No existe un proveedor con el id ${id}`
             });
         }
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
             error: 'Ocurrió un error al obtener el proveedor'
         });
-    }    
+    }
 }
 
-const postProveedor = async (req, res = response) => {    
-    try{
+const postProveedor = async (req, res = response) => {
+    try {
         const { body } = req;
 
         if (!body.tipoProveedor) {
@@ -93,7 +93,7 @@ const postProveedor = async (req, res = response) => {
             success: true,
             message: 'El proveedor fue agregado con éxito'
         });
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
@@ -107,7 +107,7 @@ const putProveedor = async (req, res = response) => {
         const { body } = req;
         const { id } = req.params;
         const proveedor = await Proveedor.findByPk(id);
-        if (!proveedor) { 
+        if (!proveedor) {
             return res.status(404).json({ success: false, error: `No existe un proveedor con el id ${id}` });
         }
 
@@ -134,17 +134,17 @@ const putProveedor = async (req, res = response) => {
             return res.status(400).json({ error: 'El campo numeroIdentificacion es obligatorio.' });
         }
 
-        if (body.tipoIdentificacion  && !/^\d{6,12}$/.test(body.numeroIdentificacion)) {
+        if (body.tipoIdentificacion && !/^\d{6,12}$/.test(body.numeroIdentificacion)) {
             return res.status(400).json({ error: 'Número de identificación no válido. Debe tener entre 6 y 12 caracteres numéricos.' });
         }
-        
+
         if (!body.razonSocial) {
             return res.status(400).json({ error: 'El campo razonSocial es obligatorio.' });
-        } 
+        }
 
         if (!body.nombreComercial) {
             return res.status(400).json({ error: 'El campo nombreComercial es obligatorio.' });
-        } 
+        }
 
         if (!body.ciudad) {
             return res.status(400).json({ error: 'El campo ciudad es obligatorio.' });

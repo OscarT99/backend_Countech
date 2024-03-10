@@ -1,4 +1,4 @@
-const {response} = require('express')
+const { response } = require('express')
 const Proveedor = require('../../models/proveedorModel/proveedorModel')
 const Compra = require('../../models/compraModel/compraModel')
 const DetalleEnCompra = require('../../models/compraModel/detalleCompraModel')
@@ -9,14 +9,14 @@ const { restarCantidadInsumoCompra } = require('../insumoController/insumoContro
 
 
 const getAllComprasConRelaciones = async (req, res = response) => {
-    try{
+    try {
         const listaCompras = await Compra.findAll({
             include: [
                 {
                     model: Proveedor,
                 },
                 {
-                    model:DetalleEnCompra,
+                    model: DetalleEnCompra,
                     include: [
                         {
                             model: Insumo
@@ -26,9 +26,9 @@ const getAllComprasConRelaciones = async (req, res = response) => {
             ]
         })
 
-        res.json({listaCompras})
+        res.json({ listaCompras })
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
@@ -39,31 +39,31 @@ const getAllComprasConRelaciones = async (req, res = response) => {
 
 const getCompraConRelacionesPorId = async (req, res = response) => {
     const { id } = req.params;
-    
-    try{
-        const compra = await Compra.findByPk(id,{
-            include:[
+
+    try {
+        const compra = await Compra.findByPk(id, {
+            include: [
                 {
-                    model:Proveedor,
+                    model: Proveedor,
                 },
                 {
-                    model:DetalleEnCompra,
-                    include:[
+                    model: DetalleEnCompra,
+                    include: [
                         {
-                            model:Insumo
+                            model: Insumo
                         }
                     ]
                 }
             ]
         });
 
-        if(!compra){
+        if (!compra) {
             return res.status(404).json({ success: false, error: 'Compra no encontrada.' });
         }
 
-        res.json( compra )
+        res.json(compra)
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
@@ -72,14 +72,14 @@ const getCompraConRelacionesPorId = async (req, res = response) => {
     }
 }
 
-const postCompraCompleta = async (req, res = response,next) => {
-    try{
+const postCompraCompleta = async (req, res = response, next) => {
+    try {
         const compraData = req.body
 
-        const validationResponse = await validarCompra(compraData,res)
+        const validationResponse = await validarCompra(compraData, res)
 
-        if(!validationResponse.success){
-            return next(res.status(400).json({success:false, error:validationResponse.error }))
+        if (!validationResponse.success) {
+            return next(res.status(400).json({ success: false, error: validationResponse.error }))
         }
 
         let estadoPago = '';
@@ -96,12 +96,12 @@ const postCompraCompleta = async (req, res = response,next) => {
             totalBruto: compraData.totalBruto,
             iva: compraData.iva,
             totalNeto: compraData.totalNeto,
-            formaPago : compraData.formaPago,
-            estadoPago:estadoPago
+            formaPago: compraData.formaPago,
+            estadoPago: estadoPago
         })
 
-        for(const detalleCompraData of compraData.DetalleEnCompras){
-             await DetalleEnCompra.create({
+        for (const detalleCompraData of compraData.DetalleEnCompras) {
+            await DetalleEnCompra.create({
                 compra: compra.id,
                 insumo: detalleCompraData.insumo,
                 cantidad: detalleCompraData.cantidad,
@@ -115,7 +115,7 @@ const postCompraCompleta = async (req, res = response,next) => {
             success: true,
             message: 'Compra completa creada exitosamente.',
         });
-    }catch(error){
+    } catch (error) {
         console.error(error);
         next({ success: false, error: 'Ocurrió un error al crear la compra completa' });
     }
@@ -248,8 +248,6 @@ const anularCompra = async (req, res = response) => {
         });
     }
 };
-
-
 
 module.exports = {
     getAllComprasConRelaciones,

@@ -13,28 +13,28 @@ const getAllPedidosConRelaciones = async (req, res = response) => {
         const listaPedidos = await Pedido.findAll({
             include: [
                 {
-                    model: Cliente,                    
+                    model: Cliente,
                 },
-                {                    
+                {
                     model: ProcesoReferenciaPedido,
-                    include: [                                
+                    include: [
                         {
-                            model: ColorProcesoReferenciaPedido,                                    
+                            model: ColorProcesoReferenciaPedido,
                         },
                         {
                             model: AsignarProcesoEmpleado,
-                                include: [
-                                    {
-                                     model: AvanceProcesoEmpleado,
-                                    }
-                            ],                                    
+                            include: [
+                                {
+                                    model: AvanceProcesoEmpleado,
+                                }
+                            ],
                         },
-                    ],                    
+                    ],
                 },
             ],
-        });        
+        });
         res.json({ listaPedidos });
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -45,26 +45,25 @@ const getAllPedidosConRelaciones = async (req, res = response) => {
 };
 
 const getPedidoInfo = async (req, res = response) => {
-    try{
+    try {
         const listaPedidoInfo = await Pedido.findAll();
 
         res.json({ listaPedidoInfo });
-    }catch (error) {
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
             error: 'Ocurrió un error al obtener la lista de pedidos',
         });
-}
+    }
 }
 
-// NUEVO MÉTODO PARA TOKEN
 const getPedidoProcesos = async (req, res = response) => {
     try {
         const listaProcesos = await ProcesoReferenciaPedido.findAll({
             include: [
                 {
-                    model: ColorProcesoReferenciaPedido,                                    
+                    model: ColorProcesoReferenciaPedido,
                 },
             ],
         });
@@ -83,21 +82,21 @@ const getPedidoProcesos = async (req, res = response) => {
 const getPedidoProcesoById = async (req, res = response) => {
     const { id } = req.params;
 
-    try{
+    try {
         const pedidoProceso = await ProcesoReferenciaPedido.findByPk(id);
 
         if (!pedidoProceso) {
             return res.status(404).json({ success: false, error: 'Proceso no encontrado.' });
-        }else{
+        } else {
             res.json(pedidoProceso);
         }
-    }catch (error) {
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
             error: 'Ocurrió un error al obtener el proceso',
         });
-    
+
     }
 }
 
@@ -109,23 +108,23 @@ const getPedidoConRelacionesPorId = async (req, res = response) => {
             include: [
                 {
                     model: Cliente,
-                },                
-                    {
-                        model: ProcesoReferenciaPedido,
-                        include: [                                
-                            {
-                                model: ColorProcesoReferenciaPedido,                                    
-                            },
-                            {
-                                model: AsignarProcesoEmpleado,
-                                    include: [
-                                        {
-                                         model: AvanceProcesoEmpleado,
-                                        }
-                                ],                                    
-                            },
-                        ], 
-                    },                
+                },
+                {
+                    model: ProcesoReferenciaPedido,
+                    include: [
+                        {
+                            model: ColorProcesoReferenciaPedido,
+                        },
+                        {
+                            model: AsignarProcesoEmpleado,
+                            include: [
+                                {
+                                    model: AvanceProcesoEmpleado,
+                                }
+                            ],
+                        },
+                    ],
+                },
             ],
         });
 
@@ -153,7 +152,7 @@ const postPedidoCompleto = async (req, res = response, next) => {
             // Si las validaciones fallan, envía un error al cliente
             return next(res.status(400).json({ success: false, error: validationResponse.error }));
         }
-    
+
         const pedido = await Pedido.create({
             cliente: pedidoData.cliente,
             ordenTrabajo: pedidoData.ordenTrabajo,
@@ -168,37 +167,37 @@ const postPedidoCompleto = async (req, res = response, next) => {
             cantidadTotal: pedidoData.cantidadTotal,
             valorTotal: pedidoData.valorUnitario * pedidoData.cantidadTotal
         });
-                        
-            // Crea los procesos en referencia
-            if (pedidoData.ProcesoEnReferenciaEnPedidos) {
-                for (const procesoData of pedidoData.ProcesoEnReferenciaEnPedidos) {
-                    const procesoEnReferencia = await ProcesoReferenciaPedido.create({
-                        pedido: pedido.id,
-                        proceso: procesoData.proceso,
-                        tipoDeMaquina: procesoData.tipoDeMaquina,
-                        cantidadTotal: procesoData.cantidadTotal,
-                        cantidadPendiente: procesoData.cantidadTotal
-                        // ... otras propiedades de ProcesoReferenciaPedido
-                    });
 
-                    // Crea los colores en proceso
-                    if (procesoData.ColorEnProcesoEnReferenciaEnPedidos) {
-                        for (const colorData of procesoData.ColorEnProcesoEnReferenciaEnPedidos) {
-                            const colorEnProceso = await ColorProcesoReferenciaPedido.create({
-                                proceso: procesoEnReferencia.id,
-                                color: colorData.color,
-                                tallaS:colorData.tallaS,
-                                tallaM:colorData.tallaM,
-                                tallaL:colorData.tallaL,    
-                                tallaXL:colorData.tallaXL,
-                                cantidadTotal: colorData.cantidadTotal,
-                                // ... otras propiedades de ColorProcesoReferenciaPedido
-                            });                            
-                        }
+        // Crea los procesos en referencia
+        if (pedidoData.ProcesoEnReferenciaEnPedidos) {
+            for (const procesoData of pedidoData.ProcesoEnReferenciaEnPedidos) {
+                const procesoEnReferencia = await ProcesoReferenciaPedido.create({
+                    pedido: pedido.id,
+                    proceso: procesoData.proceso,
+                    tipoDeMaquina: procesoData.tipoDeMaquina,
+                    cantidadTotal: procesoData.cantidadTotal,
+                    cantidadPendiente: procesoData.cantidadTotal
+                    // ... otras propiedades de ProcesoReferenciaPedido
+                });
+
+                // Crea los colores en proceso
+                if (procesoData.ColorEnProcesoEnReferenciaEnPedidos) {
+                    for (const colorData of procesoData.ColorEnProcesoEnReferenciaEnPedidos) {
+                        const colorEnProceso = await ColorProcesoReferenciaPedido.create({
+                            proceso: procesoEnReferencia.id,
+                            color: colorData.color,
+                            tallaS: colorData.tallaS,
+                            tallaM: colorData.tallaM,
+                            tallaL: colorData.tallaL,
+                            tallaXL: colorData.tallaXL,
+                            cantidadTotal: colorData.cantidadTotal,
+                            // ... otras propiedades de ColorProcesoReferenciaPedido
+                        });
                     }
                 }
             }
-        
+        }
+
         // Devuelve una respuesta si todo fue exitoso
         res.status(201).json({
             success: true,
@@ -315,7 +314,7 @@ const anularPedido = async (req, res = response) => {
         if (pedido) {
             if (pedido.estadoPedido) {
                 pedido.estadoPedido = false;
-                pedido.motivoDeAnulacion = motivoDeAnulacion; 
+                pedido.motivoDeAnulacion = motivoDeAnulacion;
                 await pedido.save();
                 res.json({
                     success: true,

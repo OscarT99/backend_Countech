@@ -4,8 +4,8 @@ const sequelize = new Sequelize({
     dialect:'mysql',
     host:'localhost',
     username:'root',
-    password:'OscarT.99',
-    database:'countech'
+    password:'11234',
+    database:'countech2'
 })
 
 // const sequelize = new Sequelize('db_project_v1', 'root', 'admin', {

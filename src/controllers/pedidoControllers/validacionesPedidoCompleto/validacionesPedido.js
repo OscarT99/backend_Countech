@@ -17,12 +17,12 @@ const validarPedido = async (body, res = response) => {
             return res.status(400).json({ error: 'El campo ordenTrabajo es obligatorio.' });
         } else {
             const existingPedido = await Pedido.findOne({
-                 where:
-                  {
-                     ordenTrabajo: body.ordenTrabajo,
-                     cliente: body.cliente                    
-                    }
-                     });
+                where:
+                {
+                    ordenTrabajo: body.ordenTrabajo,
+                    cliente: body.cliente
+                }
+            });
             if (existingPedido & body.id == 0) {
                 return res.status(400).json({ error: 'La orden de trabajo ya está asociada al cliente especificado.' });
             }
@@ -96,71 +96,71 @@ const validarPedido = async (body, res = response) => {
         }
 
         const nombresProcesosUtilizados = new Set();
-        
-            for (const procesoData of body.ProcesoEnReferenciaEnPedidos || []) {
 
-                const nombreProceso = procesoData.proceso;
+        for (const procesoData of body.ProcesoEnReferenciaEnPedidos || []) {
 
-                if (nombresProcesosUtilizados.has(nombreProceso)) {
-                    return res.status(400).json({ error: `No se puede agregar el proceso"${nombreProceso}" más de una vez en la misma referencia.` });
+            const nombreProceso = procesoData.proceso;
+
+            if (nombresProcesosUtilizados.has(nombreProceso)) {
+                return res.status(400).json({ error: `No se puede agregar el proceso"${nombreProceso}" más de una vez en la misma referencia.` });
+            }
+
+            nombresProcesosUtilizados.add(nombreProceso);
+
+            if (!procesoData.proceso) {
+                return res.status(400).json({ error: 'El campo proceso es obligatorio.' });
+            }
+
+            if (!procesoData.tipoDeMaquina) {
+                return res.status(400).json({ error: 'El campo tipoDeMaquina es obligatorio.' });
+            } else if (!['Fileteadora', 'Plana', 'Presilladora', 'Recubridora', 'Manual'].includes(procesoData.tipoDeMaquina)) {
+                return res.status(400).json({ error: 'Tipo de máquina no válido. Debe ser uno de los siguientes valores: Fileteadora, Plana, Presilladora, Recubridora, Manual.' });
+            }
+
+            if (!procesoData.cantidadTotal) {
+                return res.status(400).json({ error: 'El campo cantidadTotal es obligatorio.' });
+            } else if (parseInt(procesoData.cantidadTotal) <= 0) {
+                return res.status(400).json({ error: 'Cantidad total no válida. Debe ser un número mayor a 0.' });
+            }
+
+            if (!procesoData.ColorEnProcesoEnReferenciaEnPedidos || procesoData.ColorEnProcesoEnReferenciaEnPedidos.length === 0) {
+                return res.status(400).json({ error: `Debe ingresar al menos un color en el proceso "${nombreProceso}".` });
+            }
+
+            const nombresColoresUtilizados = new Set();
+
+            for (const colorData of procesoData.ColorEnProcesoEnReferenciaEnPedidos || []) {
+
+                const nombreColor = colorData.color;
+
+                if (nombresColoresUtilizados.has(nombreColor)) {
+                    return res.status(400).json({ error: `No se puede agregar el color"${nombreColor}" más de una vez en el mismo proceso.` });
                 }
 
-                nombresProcesosUtilizados.add(nombreProceso);
+                nombresColoresUtilizados.add(nombreColor);
 
-                if (!procesoData.proceso) {
-                    return res.status(400).json({ error: 'El campo proceso es obligatorio.' });
+
+                if (!colorData.color) {
+                    return res.status(400).json({ error: 'El campo color es obligatorio.' });
+                } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+/.test(colorData.color)) {
+
+                    return res.status(400).json({ error: 'Color no válido. Solo se permiten letras y tildes.' });
                 }
 
-                if (!procesoData.tipoDeMaquina) {
-                    return res.status(400).json({ error: 'El campo tipoDeMaquina es obligatorio.' });
-                } else if (!['Fileteadora', 'Plana', 'Presilladora', 'Recubridora', 'Manual'].includes(procesoData.tipoDeMaquina)) {
-                    return res.status(400).json({ error: 'Tipo de máquina no válido. Debe ser uno de los siguientes valores: Fileteadora, Plana, Presilladora, Recubridora, Manual.' });
+                // Agregar validación para el campo "cantidad"
+                if (!colorData.cantidadTotal) {
+                    return res.status(400).json({ error: 'El campo cantidad es obligatorio.' });
+                } else if (isNaN(colorData.cantidadTotal) || colorData.cantidadTotal < 1 || !/^\d+$/.test(colorData.cantidadTotal)) {
+                    return res.status(400).json({ error: 'Cantidad no válida. Solo se permiten números.' });
                 }
 
-                if (!procesoData.cantidadTotal) {
-                    return res.status(400).json({ error: 'El campo cantidadTotal es obligatorio.' });
-                } else if (parseInt(procesoData.cantidadTotal) <= 0) {
-                    return res.status(400).json({ error: 'Cantidad total no válida. Debe ser un número mayor a 0.' });
-                }
-
-                if (!procesoData.ColorEnProcesoEnReferenciaEnPedidos || procesoData.ColorEnProcesoEnReferenciaEnPedidos.length === 0) {
-                    return res.status(400).json({ error: `Debe ingresar al menos un color en el proceso "${nombreProceso}".` });
-                }
-
-                const nombresColoresUtilizados = new Set();
-
-                for (const colorData of procesoData.ColorEnProcesoEnReferenciaEnPedidos || []) {
-
-                    const nombreColor = colorData.color;
-
-                    if (nombresColoresUtilizados.has(nombreColor)) {
-                        return res.status(400).json({ error: `No se puede agregar el color"${nombreColor}" más de una vez en el mismo proceso.` });
-                    }
-
-                    nombresColoresUtilizados.add(nombreColor);
-
-
-                    if (!colorData.color) {
-                        return res.status(400).json({ error: 'El campo color es obligatorio.' });
-                    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+/.test(colorData.color)) {
-                     
-                        return res.status(400).json({ error: 'Color no válido. Solo se permiten letras y tildes.' });
-                    }
-
-                    // Agregar validación para el campo "cantidad"
-                    if (!colorData.cantidadTotal) {
-                        return res.status(400).json({ error: 'El campo cantidad es obligatorio.' });
-                    } else if (isNaN(colorData.cantidadTotal) || colorData.cantidadTotal < 1 || !/^\d+$/.test(colorData.cantidadTotal)) {
-                        return res.status(400).json({ error: 'Cantidad no válida. Solo se permiten números.' });
-                    }
-                                        
-                }
-            }        
-        return {success:true, error:null};
+            }
+        }
+        return { success: true, error: null };
 
     } catch (error) {
         console.error(error);
-        return { success: false, error: 'Ocurrió un error en la validación del pedido' };        
+        return { success: false, error: 'Ocurrió un error en la validación del pedido' };
     }
 }
 

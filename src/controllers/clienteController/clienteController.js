@@ -74,11 +74,11 @@ const postCliente = async (req, res = response) => {
 
         if (!body.razonSocial) {
             return res.status(400).json({ error: 'El campo razonSocial es obligatorio.' });
-        } 
+        }
 
         if (!body.nombreComercial) {
             return res.status(400).json({ error: 'El campo nombreComercial es obligatorio.' });
-        } 
+        }
 
         if (!body.ciudad) {
             return res.status(400).json({ error: 'El campo ciudad es obligatorio.' });
@@ -106,7 +106,7 @@ const putCliente = async (req, res = response) => {
         const { body } = req;
         const { id } = req.params;
         const cliente = await Cliente.findByPk(id);
-        if (!cliente) { 
+        if (!cliente) {
             return res.status(404).json({ success: false, error: `No existe un cliente con el id ${id}` });
         }
 
@@ -136,21 +136,21 @@ const putCliente = async (req, res = response) => {
         if (body.tipoIdentificacion && !/^\d{6,12}$/.test(body.numeroIdentificacion)) {
             return res.status(400).json({ error: 'Número de identificación no válido. Debe tener entre 6 y 12 caracteres numéricos.' });
         }
-        
+
         if (!body.razonSocial) {
             return res.status(400).json({ error: 'El campo razonSocial es obligatorio.' });
-        } 
+        }
 
         if (!body.nombreComercial) {
             return res.status(400).json({ error: 'El campo nombreComercial es obligatorio.' });
-        } 
+        }
 
         if (!body.ciudad) {
             return res.status(400).json({ error: 'El campo ciudad es obligatorio.' });
         } else if (!/^[A-Za-záéíóúüÜÁÉÍÓÑñ. ]+$/.test(body.ciudad)) {
             return res.status(400).json({ error: 'Ciudad no válida.' });
         }
-        
+
         await cliente.update(body);
 
         res.status(200).json({

@@ -59,7 +59,7 @@ const postUsuario = async (req, res = response) => {
         return res.status(400).json({ error: "El nombre solo puede contener letras." });
     }    
     if (nombre.length > 100) {
-        return res.status(400).json({ error: "El nombre excede la longitud máxima permitida '50' " });
+        return res.status(400).json({ error: "El nombre excede la longitud máxima permitida '100' " });
     }
     if (nombre.length < 6) {
         return res.status(400).json({ error: "Ingrese el nombre completo" });

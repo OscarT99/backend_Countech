@@ -6,14 +6,30 @@ const route = Router()
 const { getAllPedidosConRelaciones, getPedidoProcesos, getPedidoInfo, getPedidoProcesoById, postPedidoCompleto, getPedidoConRelacionesPorId, putPedidoCompleto, anularPedido } = require('../../controllers/pedidoControllers/pedidoCompletoController')
 
 
-route.get('/pedido',getAllPedidosConRelaciones);
-route.get('/pedido/info',getPedidoInfo);
-route.get('/pedido/proceso',getPedidoProcesos);
-route.get('/pedido/proceso/:id',getPedidoProcesoById);
-route.get('/pedido/:id',getPedidoConRelacionesPorId); 
-route.post('/pedido',postPedidoCompleto);
-route.put('/pedido/:id',putPedidoCompleto);
-route.put('/pedido/anularPedido/:id',anularPedido)
+route.get('/pedido', [
+    validarJWT
+ ],getAllPedidosConRelaciones);
+route.get('/pedido/info', [
+    validarJWT
+ ],getPedidoInfo);
+route.get('/pedido/proceso', [
+    validarJWT
+ ],getPedidoProcesos);
+route.get('/pedido/proceso/:id', [
+    validarJWT
+ ],getPedidoProcesoById);
+route.get('/pedido/:id', [
+    validarJWT
+ ],getPedidoConRelacionesPorId); 
+route.post('/pedido', [
+    validarJWT
+ ],postPedidoCompleto);
+route.put('/pedido/:id', [
+    validarJWT
+ ],putPedidoCompleto);
+route.put('/pedido/anularPedido/:id', [
+    validarJWT
+ ],anularPedido)
 
 
 module.exports = route

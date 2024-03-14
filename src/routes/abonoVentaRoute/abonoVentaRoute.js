@@ -19,12 +19,5 @@ route.put('/abonoVenta/:id', [
     validarJWT
 ],putAbonoVenta)
 
-/*
-route.get('/abonoVenta',getAbonoVentas)
-route.get('/abonoVenta/:id',getAbonoVenta)
-route.post('/abonoVenta',postAbonoVenta)
-route.put('/abonoVenta/:id',putAbonoVenta)
-*/
-
 
 module.exports = route

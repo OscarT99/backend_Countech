@@ -3,28 +3,28 @@ const router = express.Router();
 const { createValidator } = require('../../validators/empleado');
 const { validarJWT } = require('../../middlewares/validar-jwt')
 
-const {getEmpleadoProceso, getAllEmpleados, getOneEmpleado, postEmpleado, putCambiarEstadoEmpleado, putEmpleado} = require('../../controllers/empleadoController/empleadoController');
-/*
-route.get('/Empleado', [
-    validarJWT
-],getEmpleados)
-route.get('/Empleado/:id', [
-    validarJWT
-],getEmpleado)
-route.post('/Empleado', [
-    validarJWT
-],postEmpleado)
-route.put('/Empleado/:id', [
-    validarJWT
-],putEmpleado)
-*/
+const {getEmpleadoProceso, getEmpleadoMobile, getAllEmpleados, getOneEmpleado, postEmpleado, putCambiarEstadoEmpleado, putEmpleado} = require('../../controllers/empleadoController/empleadoController');
+
 router
-    .get('/empleado/proceso', getEmpleadoProceso)
-    .get('/empleados', getAllEmpleados)
-    .get('/empleado/:id' , getOneEmpleado)
-    .post('/empleado', postEmpleado)
-    .put('/empleado/estado/:id', putCambiarEstadoEmpleado)
-    .put('/empleado/:id', putEmpleado)
+    .get('/empleado/proceso', [
+        validarJWT
+    ], getEmpleadoProceso)
+    .get('/empleado/mobile', getEmpleadoMobile)
+    .get('/empleados', [
+        validarJWT
+    ], getAllEmpleados)
+    .get('/empleado/:id', [
+        validarJWT
+    ], getOneEmpleado)
+    .post('/empleado', [
+        validarJWT
+    ], postEmpleado)
+    .put('/empleado/estado/:id', [
+        validarJWT
+    ], putCambiarEstadoEmpleado)
+    .put('/empleado/:id', [
+        validarJWT
+    ], putEmpleado)
 
 module.exports = router
 

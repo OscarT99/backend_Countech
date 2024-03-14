@@ -22,6 +22,26 @@ const getEmpleadoProceso = async (req, res) => {
   }
 };
 
+const getEmpleadoMobile = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const data = await Empleado.findAll({
+          include: [
+              {
+                  model: AsignarProcesoEmpleado,                    
+              },
+          ],
+      });
+        res.json(data);
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({
+          success: false,
+          error: 'Ocurrió un error al obtener la lista de empleados con sus procesos',
+      });
+  }
+};
+
 const getAllEmpleados = async (req, res) => {
   try {
     const data = await Empleado.findAll();
@@ -152,6 +172,7 @@ const putEmpleado = async (req, res = response) => {
 
 module.exports = {
   getEmpleadoProceso,
+  getEmpleadoMobile,
   getAllEmpleados,
   getOneEmpleado,
   postEmpleado,

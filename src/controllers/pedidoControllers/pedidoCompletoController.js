@@ -152,15 +152,19 @@ const postPedidoCompleto = async (req, res = response, next) => {
             // Si las validaciones fallan, envía un error al cliente
             return next(res.status(400).json({ success: false, error: validationResponse.error }));
         }
+        
+        const estadoPago = pedidoData.formaPago === 'Contado' ? 'Pago' : pedidoData.estadoPago;
+
 
         const pedido = await Pedido.create({
+
             cliente: pedidoData.cliente,
             ordenTrabajo: pedidoData.ordenTrabajo,
             fechaOrdenTrabajo: pedidoData.fechaOrdenTrabajo,
             fechaEntregaOrden: pedidoData.fechaEntregaOrden,
             formaPago: pedidoData.formaPago,
             observaciones: pedidoData.observaciones,
-
+            estadoPago: estadoPago,
             referencia: pedidoData.referencia,
             descripcion: pedidoData.descripcion,
             valorUnitario: pedidoData.valorUnitario,

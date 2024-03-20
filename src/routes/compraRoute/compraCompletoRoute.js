@@ -3,7 +3,7 @@ const { validarJWT } = require('../../middlewares/validar-jwt')
 
 const route = Router()
 
-const { getAllComprasConRelaciones, getCompraConRelacionesPorId, postCompraCompleta, putCompraCompleta, anularCompra } = require('../../controllers/compraController/compraCompletoController')
+const { getAllComprasConRelaciones, getCompraConRelacionesPorId, postCompraCompleta, putCompraCompleta, anularCompra, putEstadoCompra } = require('../../controllers/compraController/compraCompletoController')
 
 
 route.get('/compra', [
@@ -21,6 +21,9 @@ route.put('/compras/:id', [
 route.put('/compra/anularCompra/:id', [
     validarJWT
 ],anularCompra)
+route.put('/compra/cambiarEstado/:id', [
+    validarJWT
+],putEstadoCompra)
 
 
 /*

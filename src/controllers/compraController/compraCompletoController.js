@@ -154,7 +154,7 @@ const putCompraCompleta = async (req, res = response, next) => {
             iva: compraData.iva,
             totalNeto: compraData.totalNeto,
             formaPago: compraData.formaPago,
-            estadoPago: estadoPago
+            estadoPago: compraData.estadoPago
         });
 
         // Actualizar detalles de compra existentes o agregar nuevos detalles
@@ -249,10 +249,46 @@ const anularCompra = async (req, res = response) => {
     }
 };
 
+
+const putEstadoCompra = async (req, res = response) =>{
+    const { body } = req;
+    const { id } = req.params;
+
+    try {
+        const compra = await Compra.findByPk(id);
+        
+        if (compra) {
+            if (body.estadoPago !== undefined) {
+                await compra.update({
+                    estadoPago: body.estadoPago
+                });
+                res.json({
+                    msg: `La compra fue actualizada con éxito`
+                });
+            } else {
+                res.status(400).json({
+                    msg: `El campo 'estadoPago' es el único campo que se puede actualizar.`
+                });
+            }
+        } else {
+            res.status(404).json({
+                msg: `No existe una compra con el id ${id}`
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: `Upps ocurrió un error`
+        });
+    }
+};
+
+
 module.exports = {
     getAllComprasConRelaciones,
     getCompraConRelacionesPorId,
     postCompraCompleta,
     putCompraCompleta,
-    anularCompra
+    anularCompra,
+    putEstadoCompra
 }
